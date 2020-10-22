@@ -1,0 +1,1 @@
+An extended definition and parser of markdown, based on `pulldown_cmark`, which allows for some further events and typographic niceties like super- and subscript.

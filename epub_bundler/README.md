@@ -1,0 +1,1 @@
+Bundle xhtml, resources and metadata into an epub file.

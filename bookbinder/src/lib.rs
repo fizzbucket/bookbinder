@@ -39,21 +39,18 @@
 //! and they'll often feature things like epigraphs or a dedication. All of these need special formatting,
 //! but you can't really extend markdown indefinitely to include them all, or before you know it you've recreated TEI without the rigour.
 //!
-//! This -- right here! -- tries to be your solution.
-//!
 //! It relies on the insight that within a text divided into semantic roles, Markdown is an ideal solution -- you can say
 //! 'emphasise this text inside an epigraph' and all is well, but you can't say -- within Markdown itself --
-//! 'this text is an epigraph'. 
+//! 'this text is an epigraph'. Since there aren't that an infinite number of possible parts to books, and things like [the epub structural semantics vocabulary](https://idpf.github.io/epub-vocabs/structure/) already have a range
+//! of defined possibilities, it's relatively easy to set up a container which renders Markdown within a
+//! more complex semantic system.
 //!
-//! But what if you could have a container which renders Markdown elements within a semantically more-complex system?
-//! After all, there aren't that an infinite number of possible parts to books, and things like [the epub structural semantics vocabulary](https://idpf.github.io/epub-vocabs/structure/) already have a range
-//! of defined possibilities.
 //!
-//! And then -- some of these elements, like a titlepage or a copyright page, are pretty strictly the product
-//! of metadata, so they might as well be generated automatically, especially since a correctly-produced epub
-//! should include this metadata already.
+//! And since some of these elements, like a titlepage or a copyright page, are pretty strictly the product
+//! of metadata, we further extend things so that they can be -- if you want -- generated automatically from the metadata
+//! which should already be included.
 //!
-//! In other words, what if you could do this: 
+//! In other words, you can do this: 
 //!
 //! ```
 //! # use bookbinder::BookSrcBuilder;
@@ -72,7 +69,7 @@
 //! ```
 //!
 //! And get a book with a titlepage and copyright information, semantically aware presentation of details,
-//! and just really nice aesthetics, just like that?
+//! and just really nice aesthetics.
 //!
 //! The example above would give you a halftitle,
 //! a titlepage, a copyright page explaining that this is copyright this year by A.N. Author and published by Publisher Name;
@@ -145,7 +142,8 @@
 //! This seperated design is intended to allow different backends to be added in future --
 //! it'd be interesting to add a way to create an html book, and potentially
 //! an alternative way to produce pdfs could be valuable, since LaTeX is gorgeous but slow,
-//! and it's a big thing for people to install.
+//! and it's a big thing for people to install. The most likely candidates are an embedded version of
+//! either `neatroff` or `SILE`.
 //!
 //! # Deserialization
 //!

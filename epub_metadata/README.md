@@ -1,0 +1,1 @@
+This crate collates a number of standardised terms for book and ebook metadata and makes them available to use as Rust enums. It is primarily a library structure to let tagged metadata be used across different crates and includes little functionality of its own.

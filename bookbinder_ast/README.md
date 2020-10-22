@@ -1,0 +1,1 @@
+This crate allows the construction of an abstract book source which others can render into a particular out format.

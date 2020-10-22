@@ -1,0 +1,1 @@
+Common utilities and niceties like font databases which can be shared across crates in the `bookbinder` ecosystem.

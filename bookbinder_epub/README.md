@@ -1,0 +1,1 @@
+This crate allows the rendering of an abstract book source (from `bookbinder_ast`) into an epub file.
