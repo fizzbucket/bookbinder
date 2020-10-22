@@ -1,0 +1,13 @@
+[package]
+name = "bookbinder_ast"
+version = "0.1.0"
+authors = ["Tom McLean <thomasowenmclean@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+extended_pulldown = {path="../extended_pulldown"}
+bookbinder_common = {path="../bookbinder_common"}
+pulldown-cmark = "^0.8"
+temp_file_name = {path="../temp_file_name"}

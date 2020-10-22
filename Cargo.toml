@@ -1,0 +1,15 @@
+[workspace]
+members = [
+	"bookbinder",
+	"extended_pulldown",
+	"bookbinder_ast",
+	"bookbinder_epub",
+	"bookbinder_latex",
+	"bookbinder_common",
+	"epub_bundler",
+	"epub_metadata",
+	"temp_file_name",
+]
+
+[profile.release]
+lto = true

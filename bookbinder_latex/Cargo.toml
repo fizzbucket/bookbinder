@@ -1,0 +1,14 @@
+[package]
+name = "bookbinder_latex"
+version = "0.1.0"
+authors = ["Tom McLean <thomasowenmclean@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bookbinder_ast = {path="../bookbinder_ast"}
+extended_pulldown = {path="../extended_pulldown"}
+bookbinder_common = {path="../bookbinder_common"}
+temp_file_name = {path="../temp_file_name"}
+lazy_static = "^1.4"

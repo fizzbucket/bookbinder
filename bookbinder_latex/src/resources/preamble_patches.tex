@@ -1,0 +1,22 @@
+
+\newcommand{\chaptertocline}[1]{\relax}
+
+\tracingpatches
+\makeatletter
+\xpatchcmd{\@chapter}%
+{\addcontentsline {toc}{chapter}{\protect
+ \numberline {\thechapter }#1}}% search for this
+{\chaptertocline{#1}}% replace with this
+{}% success
+{}% failure
+\makeatother
+
+\newcommand{\suppresschapternumbersintoc}{
+\renewcommand{\chaptertocline}[1]{\addcontentsline{toc}{chapter}{##1}}
+}
+
+\newcommand{\restorechapternumbersintoc}{
+\renewcommand{\chaptertocline}[1]{\addcontentsline {toc}{chapter}{\protect \numberline {\thechapter }##1}}
+}
+
+\ifundef{\smcp}{\newcommand{\smcp}[1]{\MakeUppercase{#1}}}{}

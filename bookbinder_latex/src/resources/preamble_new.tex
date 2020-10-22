@@ -1,0 +1,166 @@
+% the following commands are required
+% - a redefinition of titlepage
+% - the new group titlepagetitleblock
+% - the command titlepagetitle
+% - the command titlepagesubtitle
+% - the environment titlepagecontributors
+% - the command contributorgroup
+% - the command ctbname
+% - the command ctband
+
+% add hooks to titlepage environment
+
+\AtBeginEnvironment{titlepage}{%
+\newgeometry{hmargin=0.5in, vmargin={1.5in, 0.6in}}%
+}
+
+\AtEndEnvironment{titlepage}{%
+\restoregeometry%
+\clearpage
+}
+
+
+\newenvironment{titlepagetitleblock}%
+{\centering%
+\titlepagetypeface%
+}%
+{\vspace{0.12in}
+\rule[\dimexpr0.5\baselineskip\relax]{2in}{0.5pt}
+\\\vspace{0.12in}%
+}
+
+\newenvironment{titlepagecontributors}%
+{\centering\titlepagetypeface}%
+{\vfill}
+
+\newenvironment{contributorgroup}%
+{\relax}%
+{\null\vspace{0.3in}}
+
+
+
+\newcommand{\titlepagetitle}[1]{{\bf\titlepagetypeface\Huge\MakeUppercase{#1}\unskip\strut\par}}
+\newcommand{\titlepagesubtitle}[1]{\vspace{0.12in}{\titlepagetypeface\Large \MakeUppercase{#1}\par}}
+\newcommand{\ctbname}[1]{{\Huge \MakeUppercase{#1}}}
+\newcommand{\ctband}{\\\vspace{2mm}{\Large and}\\\vspace{2mm}\par}
+\newcommand{\contributorintro}[1]{\par{\Large \MakeUppercase{#1}}\\\vspace{5mm}}
+\newcommand{\publisherlogo}[1]{\centering\includegraphics[height=1in]{#1}}
+
+\newenvironment{copyrightpage}%
+{\clearpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\raggedright
+\noindent}%
+{\clearpage}
+
+\newcommand{\copyrightpagetitle}[1]{{\bf\sffamily\MakeUppercase{#1}}}
+
+\newenvironment{halftitle}{\thispagestyle{empty}\null\vspace{1in}\noindent\hspace{1in}\begin{minipage}[t]{3in}\flushright\sffamily}{\end{minipage}\clearpage{\thispagestyle{empty}}}
+
+\newenvironment{authorsnote}{\chapter{Author's Note}}{}
+
+\newenvironment{acknowledgements}{\chapter{Acknowledgements}}{}
+
+\newenvironment{dedication}%
+{\clearpage
+\thispagestyle{empty}
+\null\vspace{2in}
+\begin{minipage}[t]{3in}
+\centering
+\noindent
+\bgroup
+\itshape
+\noindent
+}%
+{\egroup\end{minipage}\clearpage\thispagestyle{empty}}
+
+\newenvironment{colophon}{\clearpage\thispagestyle{empty}\null\vfill\centering}{\vfill}
+
+% A header for ancillary chapters like forewords
+% The first argument is the label for the heading,
+% the second the actual title, and the third the authors
+% of the section
+\newcommand{\ancillaryheader}[3]{%
+	\setchapterlabel{#1}
+	\setchapterauthors{#3}
+	\chapter[#1: #2]{#2}
+	\unsetchapterauthors
+	\unsetchapterlabel
+}
+
+% A header for a chapter which also gives a label
+% The first argument is the label, the second the actual title
+\newcommand{\labelledchapter}[2]{%
+	\setchapterlabel{#1}
+	\chapter[#1: #2]{#2}
+	\unsetchapterlabel
+}
+
+% A header for untitled ancillary chapters like forewords,
+% where no further label is desired but there are authors
+% The first argument is the title for the heading,
+% the second the authors
+% of the section
+\newcommand{\unlabelledancillaryheader}[2]{
+	\setchapterlabel{}
+	\setchapterauthors{#2}
+	\chapter{#1}
+	\unsetchapterlabel
+	\unsetchapterauthors
+}
+
+\let\oldchaptertitlename\chaptertitlename
+\renewcommand{\chaptertitlename}{\MakeUppercase{\oldchaptertitlename}}
+
+\newcommand{\defaultchaptertitlelabel}{{\large \chaptertitlename{} \thechapter}}
+\newcommand{\chaptertitlelabel}{\defaultchaptertitlelabel}
+
+\newcommand{\setchapterlabel}[1]{
+	\renewcommand{\chaptertitlelabel}{\MakeUppercase{#1}}
+}
+
+\newcommand{\unsetchapterlabel}{\renewcommand{\chaptertitlelabel}{\defaultchaptertitlelabel}}
+
+\newcommand{\posttitle}{}
+\newcommand{\setchapterauthors}[1]{
+	\renewcommand{\posttitle}{\\\vspace{1em}{\large\uppercase{#1}}}
+}
+\newcommand{\unsetchapterauthors}{\renewcommand{\posttitle}{}}
+\newcommand{\printtitle}[1]{{\huge \MakeUppercase{#1}}\posttitle}
+
+\newcommand{\setchapterheaderformat}{%
+\titleformat{\chapter}%
+[display]%
+{\headingtypeface\centering}% The format to apply to the whole text
+{\chaptertitlelabel}% The label
+{1em}% seperation between label and body
+{\printtitle}% Code preceding the title body. The last command can take an argument
+{} % code following the title body
+}
+
+\setchapterheaderformat
+
+\newenvironment{epigraphs}%
+{\clearpage\thispagestyle{empty}\null\vspace{1in}\noindent\hspace{0.5in}\begin{minipage}[t]{4in}\raggedright}%
+{\end{minipage}\clearpage{\thispagestyle{empty}}}
+
+\newcommand{\epigraphsource}[1]{\vspace{2mm}\hfill #1}
+
+\let\originalappendixname\appendixname
+\renewcommand{\appendixname}{\MakeUppercase{\originalappendixname}}
+
+% you will probably want to redefine this at a given moment
+% so that, for example, the current contributor in a foreword
+% is the author of a foreword
+\newcommand{\currentcontributor}{{\relax}}
+
+% the way to label a page -- could be title, current chapter title, etc
+\newcommand{\pageidentifier}{\relax}
+
+\newcommand{\footerseperator}{~·~}
+\newenvironment{cipblock}[1]{%
+  \leavevmode\par\normalfont\fontsize{8\p@}{10\p@}\selectfont
+  \textit{#1}\par%
+  \ttfamily\@vobeyspaces\obeylines
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip}{\par\vskip8pt\relax}

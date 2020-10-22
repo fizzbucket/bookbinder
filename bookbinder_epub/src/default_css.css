@@ -1,0 +1,744 @@
+@charset "UTF-8";
+/* Originally based on Blitz */
+html,
+article,
+address,
+aside,
+blockquote,
+canvas,
+dd,
+details,
+div,
+dl,
+dt,
+figure,
+figcaption,
+footer,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hr,
+li,
+main,
+nav,
+ol,
+p,
+pre,
+section,
+summary,
+ul {
+  margin: 0;
+  padding: 0;
+  /* RS may apply vertical padding to el such as p */
+  font-size: 1em;
+  /* Font size in pixel disable the user setting in legacy RMSDK */
+  line-height: inherit;
+  /* Kindle ignores it, Kobo needs it. If you don’t use inherit, the user setting may be disabled on some Kobo devices */
+  text-indent: 0;
+  font-style: normal;
+  font-weight: normal;
+}
+/* This is absolutely necessary for backwards compatibility */
+article,
+aside,
+figure,
+figcaption,
+footer,
+header,
+main,
+nav,
+section {
+  display: block;
+}
+[hidden] {
+  display: none;
+}
+/* [Opinionated] Default to prevent RS from justifying all of these! */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dt,
+pre {
+  text-align: left;
+}
+nav[epub|type~="toc"] ol {
+  list-style: none !important;
+}
+@media amzn-kf8, amzn-mobi {
+  nav ol {
+    list-style-type: none !important;
+  }
+}
+nav[epub|type~="landmarks"],
+nav[epub|type~="page-list"] {
+  display: none;
+}
+a,
+abbr,
+b,
+bdi,
+bdo,
+cite,
+code,
+data,
+del,
+dfn,
+em,
+i,
+ins,
+kbd,
+mark,
+q,
+rp,
+rt,
+rtc,
+ruby,
+s,
+samp,
+small,
+span,
+strong,
+sub,
+sup,
+time,
+var {
+  font-size: inherit;
+  vertical-align: baseline;
+  font-style: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+q {
+  quotes: none;
+}
+body > :last-child,
+body > section > :last-child {
+  margin-bottom: 0;
+}
+/* PAGE LAYOUT */
+@page {
+  margin: 30px 30px 20px 30px;
+  padding: 0;
+}
+body {
+  font-size: 100%;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  widows: 2;
+  orphans: 2;
+}
+/* TYPOGRAPHY */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+blockquote p cite,
+dt,
+pre,
+address,
+table,
+caption,
+th,
+td,
+.align-left,
+.align-center,
+.align-right,
+.caption,
+.no-hyphens {
+  adobe-hyphenate: none;
+  -ms-hyphens: none;
+  -moz-hyphens: none;
+  -webkit-hyphens: none;
+  -epub-hyphens: none;
+  hyphens: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dt,
+hr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+@media amzn-kf8 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  dt,
+  hr {
+    page-break-inside: auto;
+    break-inside: auto;
+    /* Fix blank bug because of page-break-inside: avoid… */
+  }
+}
+h1 {
+  font-size: 1.4375em;
+  line-height: 1.04347826;
+  margin-top: 0em;
+  margin-bottom: 1.4375em;
+}
+@media amzn-kf8 {
+  h1 {
+    line-height: 1.2;
+    /* Minimum value Kindle supports */
+  }
+}
+@media amzn-mobi {
+  h1 {
+    font-size: xx-large;
+    /* Keywords offer more precision for mobi 7*/
+    margin: 0 0 2em 0;
+    /* mobi7 doesn’t support decimal values */
+  }
+}
+h2 {
+  font-size: 1.3125em;
+  line-height: 1.14285714;
+  margin-top: 2.28571429em;
+  margin-bottom: 1.14285714em;
+}
+@media amzn-kf8 {
+  h2 {
+    line-height: 1.2;
+    /* Minimum value Kindle supports */
+  }
+}
+@media amzn-mobi {
+  h2 {
+    font-size: x-large;
+    margin: 2em 0 1em 0;
+  }
+}
+h3 {
+  font-size: 1.125em;
+  line-height: 1.33333333;
+  margin-top: 1.33333333em;
+  margin-bottom: 1.33333333em;
+}
+@media amzn-mobi {
+  h3 {
+    font-size: large;
+    margin: 1em 0;
+  }
+}
+h4 {
+  font-size: 1em;
+  line-height: 1.5;
+  margin-top: 1.5em;
+  margin-bottom: 0em;
+}
+@media amzn-mobi {
+  h4 {
+    font-size: medium;
+    margin: 1em 0 0 0;
+  }
+}
+h5 {
+  /* Styles */
+}
+h6 {
+  /* Styles */
+}
+p {
+  text-indent: 1em;
+}
+blockquote {
+  margin: 1.5em 5%;
+  font-size: 0.9375em;
+
+}
+@media amzn-mobi {
+  blockquote {
+    margin: 1em 5%;
+    font-size: 0.9375em;
+  }
+}
+address {
+  /* Styles */
+}
+/* MICRO TYPOGRAPHY */
+a {
+  text-decoration: underline;
+  /* Note: KF8 will force this value unless you use "el.class a" */
+  font-weight: bold;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  /* iBooks override (iOS 9 + El Capitan in night mode) */
+  /* inherit = text color */
+}
+abbr {
+  /* Note: Kindle doesn't support that */
+}
+i,
+cite,
+dfn,
+em {
+  font-style: italic;
+}
+/* Get back to normal when italic nested in italic */
+i i,
+i cite,
+i dfn,
+i em,
+cite i,
+cite cite,
+cite dfn,
+cite em,
+dfn i,
+dfn cite,
+dfn dfn,
+dfn em,
+em i,
+em cite,
+em dfn,
+em em {
+  font-style: normal;
+}
+b,
+strong {
+  font-weight: bold;
+}
+del,
+s {
+  text-decoration: line-through;
+}
+mark {
+  background-color: yellow;
+  color: inherit;
+}
+ins {
+  /* Styles */
+}
+small {
+  font-size: 0.8125em;
+}
+@media amzn-mobi {
+  small {
+    font-size: small;
+  }
+}
+/* Styling is improved to prevent sub from affecting line-height */
+sub {
+  font-size: 75%;
+  line-height: 1.2;
+  vertical-align: sub;
+  /* Fallback */
+  vertical-align: -20%;
+}
+@media amzn-mobi {
+  sub {
+    font-size: x-small;
+  }
+}
+/* Styling is improved to prevent sup from affecting line-height */
+sup {
+  font-size: 75%;
+  line-height: 1.2;
+  vertical-align: super;
+  /* Fallback */
+  vertical-align: 33%;
+}
+@media amzn-mobi {
+  sup {
+    font-size: x-small;
+  }
+}
+/* i18n */
+/* Ruby text */
+rt {
+  font-size: 50%;
+  /* Line-height may need to be adjusted to fit ruby text. */
+  text-transform: full-size-kana;
+  /* Increases the legibility of Japanese ruby characters. */
+}
+/* FIGURES + IMAGES  */
+figure {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin: 1.5em 0;
+  text-align: center;
+  text-indent: 0;
+}
+@media amzn-kf8 {
+  figure {
+    page-break-inside: auto;
+    break-inside: auto;
+    /* Fix blank bug because of page-break-inside: avoid… */
+  }
+}
+
+img {
+  width: auto;
+  max-width: 100%;
+  /* Note: KF8 doesn't support max-width hence "width: auto;" as fallback */
+  height: auto;
+  object-fit: contain;
+  vertical-align: bottom;
+  /* Remove gap after the image */
+}
+/* LISTS */
+ul,
+ol {
+  margin: 1.5em 0;
+  padding-left: 2em;
+}
+@media amzn-mobi {
+  ul,
+  ol {
+    margin: 1em 0;
+  }
+}
+ol ol,
+ol ul,
+ul ol,
+ul ul {
+  padding-left: 1em;
+}
+ul {
+  list-style-type: disc;
+  list-style-position: outside;
+}
+ul ul {
+  list-style-type: square;
+}
+ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+ol ol {
+  list-style-type: lower-roman;
+}
+/* DEFINITION LISTS */
+dl {
+  margin: 1.5em 0 1.5em 5%;
+}
+@media amzn-mobi {
+  dl {
+    margin: 1em 5%;
+  }
+}
+dt {
+  margin: 1.5em 0 0 0;
+  font-weight: bold;
+}
+@media amzn-mobi {
+  dt {
+    margin-top: 1em;
+  }
+}
+dd {
+  /* Styles */
+}
+dt > dfn {
+  font-style: normal;
+  font-weight: bold;
+}
+/* HORIZONTAL RULES — CONTEXT BREAKS */
+hr {
+  width: 25%;
+  margin-left: 37.5%;
+  margin-top: 1.4375em;
+  margin-bottom: 1.4375em;
+  height: 0;
+  border: none;
+  border-top: 0.125em solid currentColor;
+  /* currentColor = color of text (getting around night mode) */
+  opacity: 0.5;
+  /* Opacity -> grayscale. If opacity is declared for too many elements in a XHTML file, performance of legacy RMSDK takes a hit */
+}
+@media amzn-mobi {
+  hr {
+    margin: 1em 0;
+  }
+}
+
+/* TABLES */
+table {
+  display: table;
+  table-layout: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  max-width: 100%;
+  margin: 1.5em auto;
+  /* Note: legacy RMSDK sets auto to 0, which is permitted in a footnote of the EPUB2 specs */
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+@media amzn-mobi {
+  table {
+    margin: 1em 0;
+  }
+}
+caption {
+  caption-side: top;
+  /* Note: only value legacy RMSDK supports */
+  adobe-hyphenate: none;
+  /* proprietary for Legacy RMSDK */
+  -ms-hyphens: none;
+  -moz-hyphens: none;
+  -webkit-hyphens: none;
+  -epub-hyphens: none;
+  hyphens: none;
+  text-indent: 0;
+  /* Necessary as RS may define text-indent for p */
+  text-align: center;
+  font-weight: bold;
+}
+tbody {
+  /* Styles */
+}
+thead {
+  /* Styles */
+}
+tfoot {
+  /* Styles */
+}
+tr {
+  /* Styles */
+}
+th {
+  empty-cells: show;
+  border-bottom: 0.125em solid currentColor;
+  /* Current color = color of text (inverted in night mode) */
+  padding: 0.6875em 10px 0.6875em 0;
+  text-align: left;
+  font-weight: bold;
+}
+td {
+  empty-cells: show;
+  border-bottom: 0.0625em solid currentColor;
+  /* Current color = color of text (inverted in night mode) */
+  padding: 0.75em 10px 0.6875em 0;
+  text-align: left;
+}
+/* CODE */
+pre {
+  margin: 1.5em 0 1.5em 5%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  -ms-tab-size: 2;
+  -moz-tab-size: 2;
+  -webkit-tab-size: 2;
+  tab-size: 2;
+}
+@media amzn-mobi {
+  pre {
+    margin: 1em 0;
+  }
+}
+code,
+kbd,
+samp,
+var {
+  font-family: monospace;
+}
+canvas,
+iframe,
+svg,
+video {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+svg {
+  object-fit: contain;
+}
+
+.sans {
+  font-family: sans-serif;
+}
+
+.caps-to-small-caps {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  letter-spacing: 0.0625em;
+}
+
+@media amzn-mobi {
+  .caps-to-small-caps {
+    font-size: small;
+  }
+}
+.noindent {
+  text-indent: 0;
+}
+
+.align-center {
+  text-indent: 0;
+  text-align: center;
+}
+
+.float-center {
+  float: center;
+  margin: auto;
+  text-align: center
+}
+
+.align-right {
+  text-indent: 0;
+  text-align: right;
+}
+
+.float-right {
+  float: right;
+  margin: 0 0 0 1.5%;
+}
+
+@media amzn-mobi {
+  .float-right {
+    float: none;
+    margin: 1em 0;
+    text-align: center;
+  }
+}
+
+.float-right img {
+  width: 100%;
+}
+
+.margin-top-m {
+  margin-top: 1.5em;
+}
+
+.halftitle_header {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: right;
+}
+
+.colophon_header {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+  margin-top: 6em;
+  margin-bottom: 1.5em;
+}
+
+.generic_header {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+  margin-bottom: 1.4375em;
+}
+
+.generic_header_with_authors {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+  margin-bottom: 0.6em;
+}
+
+.halftitle_section {
+  margin-top: 6em;
+  page-break-after: always;
+  break-after: always
+}
+
+.copyright_page_section {
+  margin-top: 6em;
+  page-break-after: always;
+  break-after: always;
+  font-size: 0.9375em;
+  line-height: 1.6;
+}
+
+.dedication_section {
+  margin-top: 6em;
+  text-indent: 0;
+  text-align: right;
+  width: 90%;
+  margin: 1.5em 5%;
+  page-break-after: always;
+  break-after: always;
+}
+
+.epigraph_section {
+  width: 90%;
+  margin: 1.5em 5%;
+  page-break-after: always;
+  break-after: always;
+  margin-top: 6em;
+}
+
+.colophon_wrapper {
+  text-indent: 0;
+  text-align: center;
+  margin-top: 6em;
+  width: 90%;
+  margin: 1.5em 5%;
+  page-break-after: always;
+  break-after: always;
+}
+
+.division_authors {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+  margin-bottom: 1.4375em;
+}
+
+.division_label {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+  margin-bottom: 0.3em;
+}
+
+.epigraph_source {
+  text-indent: 0;
+  text-align: right;
+}
+
+.generic_subheading {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+  margin-top: 1.5em;
+}
+
+.notes_heading {
+  margin-top: 1.5em;
+  font-family: sans-serif;
+}
+
+.footnote {
+  font-size: 0.9375em;
+  line-height: 1.6;
+  text-indent: 0;
+}
+
+.notes_heading {
+  font-family: sans-serif;
+  margin-top: 1.5em;
+}
+
+@media amzn-mobi {
+  .footnote {
+    font-size: medium;
+  }
+}
+
+figcaption {
+  font-family: sans-serif;
+  text-indent: 0;
+  text-align: center;
+}

@@ -1,0 +1,100 @@
+# We set out a lot of configuration options here, to be build into code.
+# This approach saves a lot of repetitive code and (importantly) allows
+# us to use some const functions and let the compiler play,
+# rather than (for example) using a trait
+
+[Halftitle]
+header_level = 2
+header_classes = "halftitle_header"
+section_classes = "halftitle_section"
+epub_type = "halftitle"
+matter = "frontmatter"
+default_toc_format = "NoTocEntry"
+
+[Copyrightpage]
+section_classes = "copyright_page_section"
+epub_type = "copyright-page"
+matter = "frontmatter"
+default_toc_format = {Provided = "Bibliography"}
+
+[Titlepage]
+epub_type = "titlepage"
+matter = "frontmatter"
+include_stylesheet = false
+additional_head = "<style>\n:root[__ibooks_internal_theme*=\"Night\"] img, :root[__ibooks_internal_theme*=\"Gray\"] img { filter: invert(100%);}\n</style>"
+default_toc_format = "NoTocEntry"
+
+[Dedication]
+section_classes = "dedication_section"
+epub_type = "dedication"
+matter = "frontmatter"
+default_toc_format = "NoTocEntry"
+
+
+[Foreword]
+header_classes = "generic_header"
+epub_type = "foreword"
+matter = "frontmatter"
+default_toc_format = "TitleAndLabel"
+
+
+[Afterword]
+header_classes = "generic_header"
+epub_type = "afterword"
+matter = "backmatter"
+default_toc_format = "TitleAndLabel"
+
+[Introduction]
+header_classes = "generic_header"
+epub_type = "introduction"
+matter = "frontmatter"
+default_toc_format = "TitleAndLabel"
+
+
+[Colophon]
+header_level = 6
+header_classes = "colophon_header"
+section_wrapper = "colophon_wrapper"
+epub_type = "colophon"
+matter = "backmatter"
+default_toc_format = "TitleOnly"
+
+
+[Epigraph]
+section_classes = "epigraph_section"
+epub_type = "epigraph"
+matter = "frontmatter"
+default_toc_format = {Provided = "Epigraph"}
+
+[Acknowledgements]
+header_classes = "generic_header"
+epub_type = "acknowledgements"
+matter = "backmatter"
+default_toc_format = "TitleOnly"
+
+
+[Appendix]
+header_classes = "generic_header"
+epub_type = "appendix"
+matter = "backmatter"
+default_toc_format = "TitleAndLabel"
+
+[Chapter]
+header_classes = "generic_header"
+epub_type = "chapter"
+matter = "mainmatter"
+default_toc_format = "TitleAndLabel"
+
+[Part]
+header_classes = "generic_header"
+default_toc_level = 0
+epub_type = "part"
+matter = "mainmatter"
+default_toc_format = "TitleAndLabel"
+
+[Preface]
+header_classes = "generic_header"
+epub_type = "preface"
+matter = "frontmatter"
+default_toc_format = "TitleAndLabel"
+

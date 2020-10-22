@@ -1,0 +1,70 @@
+{
+	"title": "The Everything Book",
+	"shorttitle": "Everything Book",
+	"subtitle": "A book which tries to include most possibilities",
+	"authors": ["A.N. Author"],
+	"translators": ["A.N. Translator"],
+	"cover_designer": "A Cover Designer",
+	"paperback_isbn": "978-3-16-148410-0",
+	"epub_isbn": "978-3-16-148410-0",
+	"hardback_isbn": "978-3-16-148410-0",
+	"publisher": "Publisher Name",
+	"publisher_address": "Publisher Address",
+	"publisher_url": "http://www.publisher.com",
+	"print_location": "Sudbury, Ontario",
+	"dedication": "To Sara, the *only* toothless wolfhould I know",
+	"colophon": "Produced using Bookbinder",
+	"forewords": [
+		{
+			"text": "tests/foreword.md",
+			"authors": ["Foreword Author"]
+		}
+	],
+	"afterwords": [
+		{
+			"text": "tests/afterword.md",
+			"authors": ["One Author", "Two Author", "Three Author"]
+		}
+	],
+	"introductions": [
+		{
+			"text": "tests/introduction.md",
+			"authors": ["One Author", "Two Author"]
+		}
+	],
+	"preface": {
+		"text": "tests/preface.md"
+	},
+	"acknowledgements": {
+		"text": "tests/note.md",
+		"title": "Author's Note"
+	},
+	"appendices": [
+		{
+			"text": "tests/appendix1.md",
+			"title": "Something Appendicey"
+		},
+		{
+			"text": "tests/appendix2.md"
+		}
+	],
+	"mainmatter": [
+		"# Early Life",
+		"tests/mainmatter1.md"
+	],
+	"epigraphs": [
+		{
+			"text": "The paths of glory  \nLead but to the grave",
+			"author": "Thomas Grey",
+			"title": "Elegy in a Country Churchyard",
+			"quote_title": true
+		},
+		{
+			"text": " Some of us were men of the world too young; humour and balance were prized too highly; a touch of Gothic extravagance was needed to correct our over-mellow Hellenism. Such a circle does not breed Quixotes or reformers, and of few of us could it be said in the phrase of Villiers de l'Isle Adam, *il gardait au coeur les richesses stériles d'un grand nombre de rois oubliés*. I have known men like Hugh Dawnay and Francis Grenfell who would have ridden on a lost cause over the edge of the world.",
+			"author": "John Buchan",
+			"title": "Memory-hold-the-door"
+		}
+	],
+	"include_toc": true,
+	"page_number_only_in_footers": true
+}

@@ -1,0 +1,18 @@
+[package]
+name = "bookbinder_common"
+version = "0.1.0"
+authors = ["Tom McLean <thomasowenmclean@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+time = "0.1"
+aho-corasick = "0.7.13"
+resvg = "0.11"
+usvg = "0.11"
+svgtypes = "0.5"
+image = {version = "0.23.9", features = ["png", "jpeg"]}
+temp_file_name = {path="../temp_file_name"}
+lazy_static = "^1.4"
+fontdb = "^0.2.0"

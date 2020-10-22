@@ -1,0 +1,84 @@
+% ===============================================
+% PlainFancyBreak from Memoir class.
+\makeatletter
+\newcommand{\plainfancybreak}{\@ifstar{\@spfbreak}{\@pfbreak}}
+\newcommand{\@pfbreak}[3]{\par
+  \@tempdimc\pagegoal \advance\@tempdimc-\pagetotal
+  \ifdim #1>\@tempdimc \@fbreak{#3}\else \@pbreak{#2}\fi}
+\newcommand{\@spfbreak}[3]{\par
+  \@tempdimc\pagegoal \advance\@tempdimc-\pagetotal
+  \ifdim #1>\@tempdimc \@sfbreak{#3}\else \@spbreak{#2}\fi}
+
+\newcommand*{\pen@ltyabovepfbreak}{2}
+\newcommand*{\pen@ltybelowpfbreak}{-4}
+
+\newlength{\pfbreakskip}
+  \setlength{\pfbreakskip}{2\baselineskip}
+\newcommand{\pfbreakdisplay}{*\quad*\quad*}
+
+\def\pfbre@kdispl@y{\vbox to 1\pfbreakskip{\vss
+  \hb@xt@ \columnwidth{\hss \pfbreakdisplay \hss}%
+  \vss}}
+
+\edef\nopfbreakOutput{\the\output}
+\def\pfbreakOutput{%
+  \ifnum\outputpenalty=\pen@ltyabovepfbreak
+    \nopfbreakOutput
+    \pfbre@kdispl@y
+    \nobreak
+    \vskip-\pfbreakskip
+  \else\ifnum\outputpenalty=\pen@ltybelowpfbreak
+    \unvbox 255\relax
+    \nobreak
+    \vskip-\pfbreakskip
+    \pfbre@kdispl@y
+    \break
+  \else
+    \nopfbreakOutput
+  \fi
+  \fi}
+\output={\pfbreakOutput}
+
+\newcommand{\pfbreak}{\@ifstar{\@spfbreakgap}{\@pfbreakgap}}
+\newcommand{\@pfbreakgap}{%
+  \par {%
+  \skip@\lastskip
+  \nobreak
+  \vskip -\ifdim\prevdepth>\maxdepth \maxdepth
+          \else\ifdim\prevdepth>-1000pt\prevdepth
+            \else\ifinner 0pt
+              \else \pagedepth
+          \fi \fi \fi
+  \vskip -\skip@
+  \ifdim\skip@<\pfbreakskip
+    \advance\skip@ -1\skip@ \advance\skip@ 1\pfbreakskip
+  \fi
+  \penalty\pen@ltyabovepfbreak
+  \vskip\skip@
+  \penalty\pen@ltybelowpfbreak
+  }
+  \@afterindentfalse
+  \@afterheading
+}
+\newcommand{\@spfbreakgap}{%
+  \par {%
+  \skip@\lastskip
+  \nobreak
+  \vskip -\ifdim\prevdepth>\maxdepth \maxdepth
+          \else\ifdim\prevdepth>-1000pt\prevdepth
+            \else\ifinner 0pt
+              \else \pagedepth
+          \fi \fi \fi
+  \vskip -\skip@
+  \ifdim\skip@<\pfbreakskip
+    \advance\skip@ -1\skip@ \advance\skip@ 1\pfbreakskip
+  \fi
+  \penalty\pen@ltyabovepfbreak
+  \vskip\skip@
+  \penalty\pen@ltybelowpfbreak
+  }
+  \@afterindenttrue
+  \@afterheading
+}
+\makeatother
+% /PlainFancyBreak
