@@ -167,7 +167,6 @@ pub struct CollatedHeader<'a, T> {
     pub is_starred: bool,
 }
 
-
 type LabelAndTitle<'a> = (Option<Cow<'a, str>>, Option<Cow<'a, str>>);
 
 impl<'a, T: MarkerHelper> CollatedHeader<'a, T> {
@@ -180,9 +179,7 @@ impl<'a, T: MarkerHelper> CollatedHeader<'a, T> {
     /// just title if there's only a title,
     /// label as title if there's no title
     /// or just title if label and title are equivalent
-    pub fn reconcile_joined_label_and_title(
-        &'a self,
-    ) -> Option<LabelAndTitle<'a>> {
+    pub fn reconcile_joined_label_and_title(&'a self) -> Option<LabelAndTitle<'a>> {
         match (self.get_joined_label(), self.get_title_text()) {
             (None, None) => None,
             (Some(label), None) => Some((None, Some(label))),
@@ -420,8 +417,6 @@ where
                 _ => {}
             }
         }
-
-        println!("{:#?}", text);
 
         let text = if text.is_empty() { None } else { Some(text) };
 

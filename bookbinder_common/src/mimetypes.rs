@@ -183,10 +183,16 @@ impl MimeTypeHelper for MimeType {
         matches!(self, MimeType::Png | MimeType::Jpeg | MimeType::Svg)
     }
     fn is_epub_supported_image(&self) -> bool {
-        matches!(self, MimeType::Png | MimeType::Jpeg | MimeType::Svg | MimeType::Gif)
+        matches!(
+            self,
+            MimeType::Png | MimeType::Jpeg | MimeType::Svg | MimeType::Gif
+        )
     }
     fn is_latex_supported_image(&self) -> bool {
-        matches!(self, MimeType::Png | MimeType::Jpeg | MimeType::Eps | MimeType::Pdf)
+        matches!(
+            self,
+            MimeType::Png | MimeType::Jpeg | MimeType::Eps | MimeType::Pdf
+        )
     }
     fn is_epub_supported_resource(&self) -> bool {
         match self {

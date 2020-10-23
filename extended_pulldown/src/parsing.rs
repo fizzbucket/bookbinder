@@ -288,9 +288,7 @@ impl<'a> Parser<'a> {
                                             CodeBlockKind::Indented,
                                         )) => break,
                                         PulldownEvent::Text(t) => footnote_text.push_str(&t),
-                                        e => {
-                                            println!("{:?}", e);
-                                        }
+                                        _ => {}
                                     };
                                 }
                                 footnote_text = footnote_text.replace("\n", "\n\n");
