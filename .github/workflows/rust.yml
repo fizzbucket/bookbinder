@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: docker://texlive:latest
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
