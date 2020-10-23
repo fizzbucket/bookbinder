@@ -866,11 +866,24 @@ impl TexRenderer for BookSrc<'_> {
 
 /// Support for rendering to a pdf file
 pub trait PdfRenderer: TexRenderer + Sized {
+    
+    /// small method to call `latexmk --version`, in order
+    /// to check that it is installed before rendering
+    fn check_latexmk() -> Result<(), std::io::Error> {
+        std::process::Command::new("latexmk")
+            .arg("--version")
+            .stdout(std::process::Stdio::null())
+            .output()
+            .map_err(|_| std::io::Error::new(std::io::ErrorKind::Other, "Could not find latexmk; you probably need to install texlive"))
+            .map(|_| ())
+    }
+
     /// Use a pregenerated preamble in rendering
     fn render_to_pdf_with_preamble(
         self,
         options: OptionsWithRenderedPreamble,
     ) -> Result<Vec<u8>, std::io::Error> {
+        Self::check_latexmk()?;
         let tex = self.render_to_tex_with_preamble(options);
         bookbinder_common::call_latex(&tex)
     }
@@ -880,12 +893,14 @@ pub trait PdfRenderer: TexRenderer + Sized {
         self,
         options: PreambleOptions,
     ) -> Result<Vec<u8>, std::io::Error> {
+        Self::check_latexmk()?;
         let tex = self.render_to_tex_with_options(options);
         bookbinder_common::call_latex(&tex)
     }
 
     /// render with default options
     fn render_to_pdf(self) -> Result<Vec<u8>, std::io::Error> {
+        Self::check_latexmk()?;
         let tex = self.render_to_tex();
         bookbinder_common::call_latex(&tex)
     }
