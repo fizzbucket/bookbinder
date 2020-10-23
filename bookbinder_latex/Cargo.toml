@@ -5,6 +5,7 @@ authors = ["Tom McLean <thomasowenmclean@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/fizzbucket/bookbinder"
 license = "MIT OR Apache-2.0"
+description = "Produce latex and pdf books"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
