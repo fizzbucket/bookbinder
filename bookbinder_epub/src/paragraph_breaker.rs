@@ -42,6 +42,7 @@ impl<T> Item<T> {
     }
 
     #[inline]
+    #[allow(dead_code)]
     pub fn is_glue(&self) -> bool {
         match *self {
             Item::Glue { .. } => true,
@@ -401,6 +402,7 @@ pub fn total_fit<T>(items: &[Item<T>], lengths: &[i32], mut threshold: f32, loos
     result
 }
 
+#[allow(dead_code)]
 pub fn standard_fit<T>(items: &[Item<T>], lengths: &[i32], threshold: f32) -> Vec<Breakpoint> {
     let mut result = Vec::new();
     let mut index = 0;
@@ -608,7 +610,7 @@ mod tests {
                                          10, 9, 10, 10, 7, 7, 7, 10, 9, 13, 10, 10, 8];
     fn char_width(c: char) -> i32 {
         match c {
-            'a' ... 'z' => LOWERCASE_WIDTHS[c as usize - 'a' as usize],
+            'a' ..= 'z' => LOWERCASE_WIDTHS[c as usize - 'a' as usize],
             'C' => 13,
             'I' | '-' | '­' | ' ' => 6,
             ',' | ';' | '.' | '’' => 5,
