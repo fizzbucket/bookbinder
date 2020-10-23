@@ -131,7 +131,7 @@ impl<'a> Parser<'a> {
         Self::new_with_broken_link_callback(text, options, None)
     }
 
-    fn convert<'b>(text: Cow<'b, str>) -> CowStr<'b> {
+    fn convert(text: Cow<'_, str>) -> CowStr<'_> {
         match text {
             Cow::Borrowed(b) => CowStr::Borrowed(b),
             Cow::Owned(s) => match InlineStr::try_from(s.as_str()) {
@@ -383,7 +383,9 @@ impl<'a> Parser<'a> {
                 }
                 PulldownEvent::Start(PulldownTag::Paragraph) => {
                     if let Some(ref i) = in_block_quotation {
-                        block_quotations.get_mut(i).map(|(count, _)| *count += 1);
+                        if let Some((count, _)) = block_quotations.get_mut(i) {
+                            *count += 1;
+                        }
                     }
                 }
                 PulldownEvent::Text(t) if !in_verbatim && self.smarten => {

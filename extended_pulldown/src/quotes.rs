@@ -244,10 +244,7 @@ impl<'a> Replacer<'a> {
                             }
                         }
                     };
-                    let next_is_space = match next {
-                        Some(' ') | Some('\n') => true,
-                        _ => false,
-                    };
+                    let next_is_space = matches!(next, Some(' ') | Some('\n'));
 
                     if next_is_space {
                         if let Some(penultimate) = penultimate {
@@ -330,15 +327,8 @@ impl<'a> Replacer<'a> {
                         let closed_in_future = self
                             .components
                             .iter()
-                            .take_while(|x| match x {
-                                LeftQuote => false,
-                                _ => true,
-                            })
-                            .any(|x| match x {
-                                RightQuote | RightQuoteOrApostrophe => true,
-                                _ => false,
-                            });
-
+                            .take_while(|x| !matches!(x, LeftQuote))
+                            .any(|x| matches!(x, RightQuote | RightQuoteOrApostrophe));
                         if closed_in_future {
                             in_quote = true;
                             out.push('‘');
@@ -356,14 +346,8 @@ impl<'a> Replacer<'a> {
                         let closed_in_future = self
                             .components
                             .iter()
-                            .take_while(|x| match x {
-                                LeftQuote | LeftQuoteOrApostrophe => false,
-                                _ => true,
-                            })
-                            .any(|x| match x {
-                                RightQuote | RightQuoteOrApostrophe => true,
-                                _ => false,
-                            });
+                            .take_while(|x| !matches!(x, LeftQuote | LeftQuoteOrApostrophe))
+                            .any(|x| matches!(x, RightQuote | RightQuoteOrApostrophe));
                         if closed_in_future {
                             out.push('\'');
                         } else {

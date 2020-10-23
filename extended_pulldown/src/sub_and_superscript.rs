@@ -11,7 +11,6 @@ lazy_static! {
     pub(crate) static ref REGGIE: RegexSet = RegexSet::new(&[SUPERSCRIPT, SUBSCRIPT]).unwrap();
     static ref SUPERSCRIPT_REGEX: Regex = Regex::new(SUPERSCRIPT).unwrap();
     static ref SUBSCRIPT_REGEX: Regex = Regex::new(SUBSCRIPT).unwrap();
-    static ref ESCAPED_SPACE_REGEX: Regex = Regex::new(r"\\ ").unwrap();
 }
 
 macro_rules! replace_script {
@@ -49,7 +48,7 @@ fn replace<'a>(
     }
 }
 
-pub(crate) fn disambiguate_sub_and_superscript<'a>(text: CowStr<'a>) -> Cow<'a, str> {
+pub(crate) fn disambiguate_sub_and_superscript(text: CowStr<'_>) -> Cow<'_, str> {
     let mut text = match text {
         CowStr::Boxed(b) => Cow::Owned(b.to_string()),
         CowStr::Inlined(i) => Cow::Owned(i.to_string()),

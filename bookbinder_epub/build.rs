@@ -5,7 +5,6 @@ use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::path::Path;
-use toml;
 
 static DATA: &str = include_str!("data.toml");
 
@@ -18,7 +17,7 @@ enum DeserializableTocFormat {
 }
 
 impl DeserializableTocFormat {
-    fn to_representation(self) -> proc_macro2::TokenStream {
+    fn into_representation(self) -> proc_macro2::TokenStream {
         use DeserializableTocFormat::*;
 
         match self {
@@ -93,7 +92,7 @@ fn main() {
             let role = Ident::new(&role, Span::call_site());
             (role, vals.default_toc_format.clone())
         })
-        .map(|(role, val)| (role, val.to_representation()))
+        .map(|(role, val)| (role, val.into_representation()))
         .map(|(role, val)| quote! {#role => #val});
     let include_stylesheet_data = required_data_pattern!(include_stylesheet);
     let additional_head_data = optional_data_pattern!(additional_head);

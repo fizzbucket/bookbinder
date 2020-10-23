@@ -167,6 +167,9 @@ pub struct CollatedHeader<'a, T> {
     pub is_starred: bool,
 }
 
+
+type LabelAndTitle<'a> = (Option<Cow<'a, str>>, Option<Cow<'a, str>>);
+
 impl<'a, T: MarkerHelper> CollatedHeader<'a, T> {
     /// escape text suitably for the output format
     fn escape<'b, S: Into<Cow<'b, str>>>(text: S) -> Cow<'b, str> {
@@ -179,7 +182,7 @@ impl<'a, T: MarkerHelper> CollatedHeader<'a, T> {
     /// or just title if label and title are equivalent
     pub fn reconcile_joined_label_and_title(
         &'a self,
-    ) -> Option<(Option<Cow<'a, str>>, Option<Cow<'a, str>>)> {
+    ) -> Option<LabelAndTitle<'a>> {
         match (self.get_joined_label(), self.get_title_text()) {
             (None, None) => None,
             (Some(label), None) => Some((None, Some(label))),
@@ -293,6 +296,8 @@ impl<'a, T: MarkerHelper> CollatedHeader<'a, T> {
     }
 }
 
+type ContributorList<'a> = Vec<(Option<&'a str>, Vec<Cow<'a, str>>)>;
+
 /// A collation of events within a titlepage
 #[derive(Debug)]
 pub struct CollatedTitlePage<'a> {
@@ -301,7 +306,7 @@ pub struct CollatedTitlePage<'a> {
     /// A subtitle
     pub subtitle: Option<Vec<Event<'a>>>,
     /// Role and names of contributors
-    pub contributors: Option<Vec<(Option<&'a str>, Vec<Cow<'a, str>>)>>,
+    pub contributors: Option<ContributorList<'a>>,
 }
 
 /// A collation of events and information about an image
@@ -438,7 +443,7 @@ where
         let mut in_title = false;
         let mut in_subtitle = false;
 
-        while let Some(event) = self.next() {
+        for event in self {
             match event {
                 BookEvent::EndTitlePage => break,
                 BookEvent::BeginTitlePageTitle => {
@@ -489,7 +494,7 @@ where
 
     fn collect_plain_until_end_of_footnote(&mut self) -> Vec<Event<'a>> {
         let mut events = Vec::new();
-        while let Some(event) = self.next() {
+        for event in self {
             match event {
                 BookEvent::Event(Event::End(Tag::FlattenedFootnote)) => break,
                 BookEvent::Event(e) => events.push(e),
@@ -501,7 +506,7 @@ where
 
     fn collate_image(&mut self, dest: CowStr<'a>, alt: CowStr<'a>) -> CollatedImage<'a> {
         let mut caption = Vec::new();
-        while let Some(event) = self.next() {
+        for event in self {
             match event {
                 BookEvent::Event(Event::End(Tag::Image(_, _, _))) => break,
                 BookEvent::Event(e) => caption.push(e),

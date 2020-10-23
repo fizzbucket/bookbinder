@@ -172,7 +172,7 @@ fn _call_latex(tex: &str, verbose: bool) -> Result<Vec<u8>, std::io::Error> {
     let _ = ltx.wait()?;
 
     if !outpath.exists() {
-        let mut log = texpath.clone();
+        let mut log = texpath;
         let _ = log.set_extension("log");
         let log = std::fs::read_to_string(log).unwrap_or_else(|_| {
             "Latex error without log generated; perhaps LaTeX is not installed?".to_string()

@@ -180,22 +180,13 @@ impl MimeTypeHelper for MimeType {
     }
 
     fn is_suitable_cover_background(&self) -> bool {
-        match self {
-            MimeType::Png | MimeType::Jpeg | MimeType::Svg => true,
-            _ => false,
-        }
+        matches!(self, MimeType::Png | MimeType::Jpeg | MimeType::Svg)
     }
     fn is_epub_supported_image(&self) -> bool {
-        match self {
-            MimeType::Png | MimeType::Jpeg | MimeType::Svg | MimeType::Gif => true,
-            _ => false,
-        }
+        matches!(self, MimeType::Png | MimeType::Jpeg | MimeType::Svg | MimeType::Gif)
     }
     fn is_latex_supported_image(&self) -> bool {
-        match self {
-            MimeType::Png | MimeType::Jpeg | MimeType::Eps | MimeType::Pdf => true,
-            _ => false,
-        }
+        matches!(self, MimeType::Png | MimeType::Jpeg | MimeType::Eps | MimeType::Pdf)
     }
     fn is_epub_supported_resource(&self) -> bool {
         match self {
