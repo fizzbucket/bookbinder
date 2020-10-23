@@ -8,10 +8,8 @@ fn create_epub() {
     let epub = create_epub_from_json(JSON_BOOK).unwrap();
     // epub files will have extensive use of uuids, especially for ids, so it's hard to do a direct comparison with
     // expected output. Instead we just check validity.
-    let mut tmp_path = std::env::temp_dir();
-    tmp_path.push("test.epub");
-    std::fs::write(&tmp_path, &epub).unwrap();
-    bookbinder_common::epubcheck(tmp_path).unwrap();
+    std::fs::write("./tests/test.epub", &epub).unwrap();
+    bookbinder_common::epubcheck("./tests/test.epub".into()).unwrap();
 }
 
 #[test]
