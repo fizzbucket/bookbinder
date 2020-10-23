@@ -39,7 +39,7 @@
 //! and they'll often feature things like epigraphs or a dedication. All of these need special formatting,
 //! but you can't really extend markdown indefinitely to include them all, or before you know it you've recreated TEI without the rigour.
 //!
-//! It relies on the insight that within a text divided into semantic roles, Markdown is an ideal solution -- you can say
+//! This crate relies on the insight that within a text divided into semantic roles, Markdown is an ideal solution -- you can say
 //! 'emphasise this text inside an epigraph' and all is well, but you can't say -- within Markdown itself --
 //! 'this text is an epigraph'. Since there aren't that an infinite number of possible parts to books, and things like [the epub structural semantics vocabulary](https://idpf.github.io/epub-vocabs/structure/) already have a range
 //! of defined possibilities, it's relatively easy to set up a container which renders Markdown within a

@@ -77,6 +77,10 @@ The image below could be helpful, too:
 
 ## [1^st^ Example](http://example.com)
 
-This chapter's title contains a link (which will have been necessarily removed), as well as some interesting details like superscript.
+This chapter's title contains a link (which will have been necessarily removed), as well as some interesting details like superscript. A multi-para footnote follows.[^fn3]
 
-[^fn1]: Auden, 'In Memoriam W.B. Yeats'
+[^fn1]: Auden, 'In Memoriam W.B. Yeats'.
+
+[^fn3]:    Here we *go*, more pseudo-erudition -- can't you give it a rest?
+	'No, sir, I must check quotations.'
+	'This is not the 16^th^ of August, nor the 1^st^ of September.'
