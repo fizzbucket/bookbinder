@@ -153,7 +153,7 @@ impl Options {
 	/// Modify a Vec of events in accordance with these options
 	fn modify_events(&self, events: &mut Vec<BookEvent<'_>>) {
 		// replace chapter labels if necessary
-		if let Some(_) = self.chapter_label {
+		if self.chapter_label.is_some() {
 			let default_chapter_label = bookbinder_ast::SemanticRole::Chapter.get_label();
 			let labels = events.iter_mut()
 				.filter_map(|event| {
@@ -202,7 +202,7 @@ impl Options {
 					.flatten()
 				{
 					let svg_path = svg.temp_file_path(Some("bookbinder"), "svg");
-					if let Ok(_) = std::fs::write(&svg_path, svg) {
+					if std::fs::write(&svg_path, svg).is_ok() {
 						return Some(svg_path)
 					}
 				}
@@ -244,10 +244,9 @@ impl <'a> TitlePageSource<'a, Cow<'a, str>>  {
 	
 	fn map_events(events: Vec<Event<'a>>) -> Vec<TitleEvent<'a>> {
 		let mut out = Vec::with_capacity(events.len());
-		let mut events = events.into_iter();
 		let mut emph_count = 0;
 
-		while let Some(event) = events.next() {
+		for event in events.into_iter() {
 			match event {
 				Event::Text(t) => {
 					let text = escape_cowstr_for_html(t);
@@ -651,7 +650,7 @@ impl XhtmlWriter {
 					self.target.push_str(header_level);
 					self.target.push('>');
 				};
-				self.target.push_str(&title.to_uppercase());
+				self.target.push_str(&title);
 				self.target.push_str("</");
 				self.target.push_str(header_level);
 				self.target.push_str(">\n");

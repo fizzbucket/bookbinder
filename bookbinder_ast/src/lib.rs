@@ -44,7 +44,7 @@
 #![deny(unused_imports)]
 #![deny(unused_qualifications)]
 #![deny(clippy::all)]
-//#![deny(missing_docs)]
+#![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
 #![deny(variant_size_differences)]
 use std::convert::TryFrom;
@@ -60,7 +60,7 @@ mod metadata;
 pub use metadata::Metadata;
 pub mod helpers;
 
-/// Specification of a section's semantic role, such as being a foreword or a chapter
+/// Specification of a section's semantic role, such as being a foreword or a chapter.
 /// These are taken from Epub 3.2's structural semantics
 #[derive(Debug, PartialEq, Clone, Copy, Hash)]
 #[allow(missing_docs)]
@@ -830,11 +830,7 @@ impl <'a> BookSrcBuilder<'a> {
 			text[0] = Event::Start(Tag::UnindentedParagraph);
 			let end = text.iter_mut()
 				.find(|e| {
-					if let Event::End(Tag::Paragraph) = e {
-						true
-					} else {
-						false
-					}
+					matches!(e, Event::End(Tag::Paragraph))
 				})
 				.unwrap();
 			*end = Event::End(Tag::UnindentedParagraph);
@@ -1449,11 +1445,7 @@ impl <'a> EventHelper<'a> for Vec<Event<'a>> {
 		if let Some(Event::Start(Tag::Heading(1))) = self.first() {
 			let title_end = self.iter()
 				.position(|e| {
-					if let Event::End(Tag::Heading(1)) = e {
-						true
-					} else {
-						false
-					}
+					matches!(e, Event::End(Tag::Heading(1)))
 				})
 				.unwrap();
 			if title_end == self.len() {

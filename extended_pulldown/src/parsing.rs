@@ -278,9 +278,13 @@ impl <'a> Parser<'a> {
 									match e {
 										PulldownEvent::End(PulldownTag::CodeBlock(CodeBlockKind::Indented)) => break,
 										PulldownEvent::Text(t) => footnote_text.push_str(&t),
-										_ => {}
+										e => {
+											println!("{:?}", e);
+										}
 									};
 								}
+								footnote_text = footnote_text.replace("\n", "\n\n");
+
 								let parsed = PulldownParser::new(&footnote_text)
 									.map(|e| e.into_static());
 
@@ -293,7 +297,6 @@ impl <'a> Parser<'a> {
 									}
 								};
 							},
-
 							e @ PulldownEvent::Start(PulldownTag::CodeBlock(_)) => {
 								in_verbatim = true;
 								self.buffering.push(e);
@@ -302,7 +305,7 @@ impl <'a> Parser<'a> {
 								in_verbatim = false;
 								self.buffering.push(e);
 							},
-							PulldownEvent::Text(t) if !in_verbatim &&  sub_and_superscript::REGGIE.is_match(&t) => {
+							PulldownEvent::Text(t) if !in_verbatim && sub_and_superscript::REGGIE.is_match(&t) => {
 								self.add_super_or_subscript_to_buffering(t);
 							},
 							e @ PulldownEvent::End(PulldownTag::FootnoteDefinition(_)) => {
@@ -562,5 +565,43 @@ mod tests {
 			})
 			.collect::<Vec<_>>();
 		assert_eq!(parsed, vec!["This text has no quotations ", "yet"]);
+	}
+
+
+	#[test]
+	fn multi_para_footnote() {
+		use Event::*;
+		use Tag::*;
+		use CowStr::*;
+
+		let text ="Hello[^fn1].\n\n[^fn1]:    Here we *go*\n    Para 2'\n";
+		let parsed = Parser::new(text)
+			.map(|e| if let Text(Inlined(s)) = e {
+				Text(s.to_string().into())
+			} else {
+				e
+			})
+			.collect::<Vec<_>>();
+		let expected = vec![
+			Start(Paragraph),
+			Text(Borrowed("Hello")),
+			FootnoteReference(Borrowed("fn1")),
+			Text(Borrowed(".")),
+			End(Paragraph),
+			Start(FootnoteDefinition(Borrowed("fn1"))),
+			Start(Paragraph),
+			Text(Borrowed("Here we ")),
+			Start(Emphasis),
+			Text(Borrowed("go")),
+			End(Emphasis),
+			End(Paragraph),
+			Start(Paragraph),
+			Text("Para 2’".into()),
+			End(Paragraph),
+			End(FootnoteDefinition(Borrowed("fn1")))
+		];
+		assert_eq!(parsed, expected);
+
+
 	}
 }

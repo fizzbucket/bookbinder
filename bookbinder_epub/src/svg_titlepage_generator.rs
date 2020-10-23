@@ -532,7 +532,6 @@ where
 	}
 
 	let svg_with_font = writer.finish();
-	std::fs::write("with_font.svg", &svg_with_font).unwrap();
 	bookbinder_common::simplify_svg(&svg_with_font, None)
 		.map_err(|_| ())
 }
@@ -552,31 +551,4 @@ where
 	let generated = generate_titlepage_svg(source.title_events, source.subtitle_events, source.contributors, source.logo, source.typeface)?;
 	let _ = std::fs::write(&expected_filepath, &generated);
 	Ok(generated)
-}
-
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn test_generate_titlepage() {
-		let title = vec![TitleEvent::Text("The Man From Jakarta".into())];
-		let contributors = vec![(None, vec!["Nikolaus Hochstein Cox"])];
-		let logo = Some("pyrallis.png");
-		let t = generate_titlepage_svg(title, None, Some(contributors), logo, None)
-			.unwrap();
-		std::fs::write("test.svg", t).unwrap();
-	}
-
-	#[test]
-	fn test_extra_long_word() {
-			let title = vec![TitleEvent::Text("Abcdefghijklmnnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz".into())];
-		let contributors = vec![(None, vec!["A.N. Author"])];
-		let logo = Some("pyrallis.png");
-		let t = generate_titlepage_svg(title, None::<Vec<_>>, Some(contributors), logo, None)
-			.unwrap();
-		std::fs::write("long.svg", t).unwrap();
-
-	}
 }

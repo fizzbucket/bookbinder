@@ -471,7 +471,7 @@ impl LatexWriter {
 												self.output.push_str(&format!("\n\\chapter{{{}}}", title));
 											},
 											(Some(_), None) => {
-												self.output.push_str(&format!("\n\\chapter[\\chaptername{{}} \\thechapter]{{}}"));
+												self.output.push_str("\n\\chapter[\\chaptername{} \\thechapter]{}");
 											},
 											(None, Some(title)) => {
 												self.output.step_counter("chapter");
@@ -483,7 +483,7 @@ impl LatexWriter {
 											(None, None) => {
 												self.output.step_counter("chapter");
 												self.output.push_str("\n\\addcontentsline{toc}{chapter}{\\numberline{\\thechapter}  \\chaptername{} \\thechapter}");
-												self.output.push_str(&format!("\n\\chapter*{{}}"));				
+												self.output.push_str("\n\\chapter*{}");				
 											}
 
 										}
@@ -638,6 +638,8 @@ impl LatexWriter {
 					let footnote_events = events.collect_plain_until_end_of_footnote();
 					self.output.push_str("\\footnote{");
 					let mut footnote_events = footnote_events.into_iter();
+					
+					#[allow(clippy::while_let_on_iterator)]
 					while let Some(event) = footnote_events.next() {
 						match event {
 							Start(Tag::Paragraph) => {},

@@ -1,3 +1,5 @@
+//! Helpers for common ast manipulations required across different crates,
+//! such as collating multi-event elements.
 use std::path::PathBuf;
 use extended_pulldown::CowStr;
 use crate::{BookEvent, NumberFormat, EventHelper, SemanticRole};
@@ -25,7 +27,9 @@ pub trait BookEventIteratorHelper<'a> {
 /// A collation of events within an epigraph
 #[derive(Debug)]
 pub struct CollatedEpigraph<'a> {
+	/// Events in the epigraph content
 	pub text: Vec<Event<'a>>,
+	/// Events in the epigraph source
 	pub source: Vec<Event<'a>>
 }
 
@@ -36,18 +40,25 @@ pub struct EpubMarker;
 #[derive(Debug)]
 pub struct LatexMarker;
 
+/// Helpers to do with formatting and writing events for a particular output format.
 pub trait MarkerHelper {
+	/// write escaped title text to a string in the appropriate format.
+	/// For example, `Hello *world*` (as events) might become the string `Hello <em>world</em>` or Hello \emph{world}`
 	fn write_title_text<'a, I: IntoIterator<Item=Event<'a>> + std::fmt::Debug>(events: I) -> String;
+	/// escape text for the output format
 	fn escape<'a, S: Into<Cow<'a, str>>>(text: S) -> Cow<'a, str>;
-	fn escape_cowstr<'a>(text: CowStr<'a>) -> Cow<'a, str> {
+	/// escape a CowStr for the output format
+	fn escape_cowstr(text: CowStr<'_>) -> Cow<'_, str> {
 		match text {
 			CowStr::Borrowed(s) => Self::escape(s),
 			CowStr::Inlined(s) => Self::escape(s.to_string()),
 			CowStr::Boxed(t) => Self::escape(t.to_string())
 		}
 	}
+	/// Remove events which should not be present in a title,
+	/// such as block or non-textual elements
 	fn filter_title_events<'a, I: IntoIterator<Item=Event<'a>> + std::fmt::Debug>(events: I) -> Vec<Event<'a>> {
-		let collected = events.into_iter()
+		events.into_iter()
 			.filter(|event| {
 				match event {
 					Event::Text(_) => true,
@@ -62,8 +73,7 @@ pub trait MarkerHelper {
 					_ => false
 				}
 			})
-			.collect::<Vec<_>>();
-		collected
+			.collect()
 	}
 }
 
@@ -135,11 +145,18 @@ impl MarkerHelper for LatexMarker {
 #[derive(Debug)]
 pub struct CollatedHeader<'a, T> {
 	phantom: PhantomData<T>,
+	/// Text of any label, e.g. `Chapter`
 	pub label_text: Option<Cow<'a, str>>,
+	/// Number of any label, e.g. 1 for the first chapter
 	pub label_number: Option<u8>,
+	/// Format in which to display the number, such as 
+	/// arabic, roman etc
 	pub label_number_format: Option<NumberFormat>,
+	/// The text of this header
 	pub text: Option<Vec<Event<'a>>>,
+	/// Names of any authors
 	pub authors: Option<Vec<Cow<'a, str>>>,
+	/// Whether the header should be treated as starred
 	pub is_starred: bool
 }
 
@@ -176,6 +193,8 @@ impl <'a, T: MarkerHelper> CollatedHeader<'a, T> {
 		self.label_text.as_deref().map(Self::escape)
 	}
 
+	/// Get a representation of the label number in the appropriate format,
+	/// if any.
 	pub fn get_label_number(&self) -> Option<Cow<'a, str>> {
 		match (self.label_number, self.label_number_format) {
 			(None, _) => None,
@@ -199,6 +218,8 @@ impl <'a, T: MarkerHelper> CollatedHeader<'a, T> {
 		}
 	}
 
+	/// write the text of the title to a string,
+	/// in the format represented by T
 	pub fn get_title_text(&self) -> Option<String> {
 		if let Some(ref text) = self.text {
 			let text = T::write_title_text(text.clone());
@@ -276,16 +297,22 @@ impl <'a, T: MarkerHelper> CollatedHeader<'a, T> {
 /// A collation of events within a titlepage
 #[derive(Debug)]
 pub struct CollatedTitlePage<'a> {
+	/// Events representing the title
 	pub title: Vec<Event<'a>>,
+	/// A subtitle
 	pub subtitle: Option<Vec<Event<'a>>>,
+	/// Role and names of contributors
 	pub contributors: Option<Vec<(Option<&'a str>, Vec<Cow<'a, str>>)>>
 }
 
 /// A collation of events and information about an image
 #[derive(Debug)]
 pub struct CollatedImage<'a> {
+	/// Events in the image caption
 	pub caption: Option<Vec<Event<'a>>>,
+	/// Path to the image
 	pub dest: CowStr<'a>,
+	/// Alt text of the image
 	pub alt: Option<CowStr<'a>>
 }
 
@@ -323,7 +350,7 @@ impl <'a, I> BookEventIteratorHelper<'a> for I where I: Iterator<Item=BookEvent<
 		let mut in_text = false;
 		let mut in_source = false;
 
-		while let Some(event) = self.next() {
+		for event in self {
 			match event {
 				BookEvent::EndSemantic(SemanticRole::Epigraph) => break,
 				BookEvent::BeginEpigraphText => {
@@ -364,15 +391,13 @@ impl <'a, I> BookEventIteratorHelper<'a> for I where I: Iterator<Item=BookEvent<
 		let mut authors = None;
 
 		let mut events = Vec::new();
-		while let Some(event) = self.next() {
+		for event in self {
 			if matches!(event, BookEvent::EndDivisionHeader(_)) {
 				break;
 			} else {
 				events.push(event);
 			}
 		};
-
-		println!("{:?}", events);
 
 		for event in events.into_iter() {
 			match event {

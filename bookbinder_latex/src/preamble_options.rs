@@ -1,4 +1,3 @@
-use std::convert::TryFrom;
 use bookbinder_ast::{NumberFormat, TextHeaderOptions};
 use crate::LatexSecNumDepth;
 use std::path::{PathBuf, Path};
@@ -7,7 +6,6 @@ use crate::OptionsWithRenderedPreamble;
 use temp_file_name::TempFilePath;
 use bookbinder_common::MimeTypeHelper;
 use bookbinder_common::fonts::{font_exists, FontInfo, SANS_FONT_PATHS, SERIF_FONT_PATHS};
-use lazy_static::lazy_static;
 
 const DEFAULT_LINESPREAD: f32 = 1.1;
 const DEFAULT_PART_FORMAT: &str = r#"\titleformat{\part}[display]{\headingtypeface\Huge}{\itshape Part \thepart}{1em}{\thispagestyle{empty}}{}"#;
