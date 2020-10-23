@@ -1,5 +1,21 @@
 //! Create pdf or epub books from markdown.
 //!
+//! # Example output
+//!
+//! 1. [pdf](https://raw.githubusercontent.com/fizzbucket/bookbinder/main/bookbinder/tests/test.pdf)
+//! 2. [epub](https://raw.githubusercontent.com/fizzbucket/bookbinder/main/bookbinder/tests/test.epub)
+//!
+//! # Installation
+//! 
+//! 
+//! Pdf support currently requires `xelatex` and `latexmk` to be installed; most LaTeX installations will have these already.
+//! If you want to include images in pdf format, the command `pdfcairo` should also be available. Otherwise, we have no dependencies!
+//! 
+//! There is support for a limited binary which takes a json specification of a book -- see `DeserializableBook` -- from stdin and writes it to stdout; 
+//! the easiest way to get that is probably `cargo install bookbinder`. Then usage is as simple as `cat in.json | bookbinder > out.pdf`
+//! But it's more likely you'll be using this as part of a script or library.
+//! Add `bookbinder = "0.1.0"` to your Cargo.toml, and read on for details!
+//!
 //! # Basic Example
 //!
 //! ```
@@ -35,13 +51,11 @@
 //! page numbers in a foreword should probably be represented as roman numerals and any labels should refer
 //! to an appendix as `Appendix A`, not `Chapter 23`.
 //!
-//! Then you've got other difficulties -- most books will want a titlepage and a titlepage verso (copyright page),
-//! and they'll often feature things like epigraphs or a dedication. All of these need special formatting,
-//! but you can't really extend markdown indefinitely to include them all, or before you know it you've recreated TEI without the rigour.
+//! Similarly, plain text in a dedication shouldn't look like plain text in the body of a document...
 //!
 //! This crate relies on the insight that within a text divided into semantic roles, Markdown is an ideal solution -- you can say
 //! 'emphasise this text inside an epigraph' and all is well, but you can't say -- within Markdown itself --
-//! 'this text is an epigraph'. Since there aren't that an infinite number of possible parts to books, and things like [the epub structural semantics vocabulary](https://idpf.github.io/epub-vocabs/structure/) already have a range
+//! 'this text is an epigraph'. Since there aren't an infinite number of possible parts to books, and things like [the epub structural semantics vocabulary](https://idpf.github.io/epub-vocabs/structure/) already have a range
 //! of defined possibilities, it's relatively easy to set up a container which renders Markdown within a
 //! more complex semantic system.
 //!
@@ -67,9 +81,6 @@
 //!     .add_foreword(foreword_with_custom_heading, None, vec!["First Foreword Author", "Second Foreword Author"])
 //!     .add_mainmatter(mainmatter);
 //! ```
-//!
-//! And get a book with a titlepage and copyright information, semantically aware presentation of details,
-//! and just really nice aesthetics.
 //!
 //! The example above would give you a halftitle,
 //! a titlepage, a copyright page explaining that this is copyright this year by A.N. Author and published by Publisher Name;
@@ -129,10 +140,6 @@
 //! build a pipeline `arbitrary input format -> pandoc -> markdown -> bookbinder`, so that books can be built from things like Word documents.
 //!
 //! # Technical details
-//!
-//! We use a custom solution for bundling epubs, but pdf files are produced by calling `XeLaTex` through
-//! `latexmk`. So you'll need LaTex installed to make pdfs! Also, if you want to include images in pdf format,
-//! you'll need to have `pdftocairo` installed.
 //!
 //! Architecturally, this crate is a very thin wrapper over:
 //!   1. `bookbinder_ast`, which sets out an abstract book source, and
