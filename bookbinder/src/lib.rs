@@ -29,7 +29,7 @@
 //! a top-level markdown header (`# Header`) might represent a section, a chapter or a part
 //! depending on how a book is structured. Then it might need to be rendered with a label (`Chapter 1: Header`) or as a number alone (`I` or `One` or `1`),
 //! or as a title alone (`Header`)...
-//! 
+//!
 //! If it looks more like `# Foreword` or `# Appendix`
 //! you've got another set of problems: in a proper book, these should display differently -- for example,
 //! page numbers in a foreword should probably be represented as roman numerals and any labels should refer
@@ -50,7 +50,7 @@
 //! of metadata, we further extend things so that they can be -- if you want -- generated automatically from the metadata
 //! which should already be included.
 //!
-//! In other words, you can do this: 
+//! In other words, you can do this:
 //!
 //! ```
 //! # use bookbinder::BookSrcBuilder;
@@ -61,7 +61,7 @@
 //!
 //! let src = BookSrcBuilder::new("A Book") // Start with a title
 //!     .author("A.N. Author")
-//!     .publisher("Publisher Name") 
+//!     .publisher("Publisher Name")
 //!     .add_introduction(introduction, None, "Introduction Author")
 //!     .set_dedication(dedication)
 //!     .add_foreword(foreword_with_custom_heading, None, vec!["First Foreword Author", "Second Foreword Author"])
@@ -84,7 +84,7 @@
 //!
 //! And so on. It's pretty cool.
 //!
-//! But even better is that it's easy to change how these basic semantic constructs are represented -- if you 
+//! But even better is that it's easy to change how these basic semantic constructs are represented -- if you
 //! just want to ignore whatever chapters are titled and call them `One`, `Two` and `Three`, you can just set an
 //! option to do that! If you want your pdf book to be all in A4 paper and set in Comic Sans, but with headers in Papyrus -- many things
 //! are possible, but only some are well-advised.
@@ -124,7 +124,7 @@
 //! - smartens straight quotes and replaces sequences of hyphens with appropriate dashes, and gives ellipses instead of `...`
 //! - includes footnotes
 //! - includes sub and superscript
-//! 
+//!
 //! For full details, see [extended_pulldown](../extended_pulldown). Incidentally, an advantage of doing things this way is that it's very easy to
 //! build a pipeline `arbitrary input format -> pandoc -> markdown -> bookbinder`, so that books can be built from things like Word documents.
 //!
@@ -154,32 +154,32 @@
 //! to make deserialization easier and more understandable.
 //!
 //! For full details, see the `deserialization` module.
-//! 
-pub use bookbinder_latex::LatexSecNumDepth;
-use bookbinder_latex::PdfRenderer;
+//!
+pub use bookbinder_ast::{BookSrc, BookSrcBuilder};
+use bookbinder_epub::EpubRenderer;
 pub use bookbinder_epub::Options as EpubOptions;
 pub use bookbinder_epub::RenderingError as EpubRenderingError;
-use bookbinder_epub::EpubRenderer;
+pub use bookbinder_latex::LatexSecNumDepth;
+use bookbinder_latex::PdfRenderer;
 pub use bookbinder_latex::PreambleOptions as LatexOptions;
-pub use bookbinder_ast::{BookSrcBuilder, BookSrc};
 pub mod deserialization;
 
 /// Create an epub 3.2 from a `BookSrc` with the given options
 pub fn create_epub(src: BookSrc<'_>, options: EpubOptions) -> Result<Vec<u8>, EpubRenderingError> {
-	src.render_to_epub(options)
+    src.render_to_epub(options)
 }
 
 /// Create a pdf from a `BookSrc` with the given options
 pub fn create_pdf(src: BookSrc<'_>, options: LatexOptions) -> Result<Vec<u8>, std::io::Error> {
-	src.render_to_pdf_with_options(options)
+    src.render_to_pdf_with_options(options)
 }
 
 /// Create an epub from a `BookSrc` with default options
 pub fn create_epub_default(src: BookSrc<'_>) -> Result<Vec<u8>, EpubRenderingError> {
-	src.render_to_epub_default()
+    src.render_to_epub_default()
 }
 
 /// Create a pdf from a `BookSrc` with default options
 pub fn create_pdf_default(src: BookSrc<'_>) -> Result<Vec<u8>, std::io::Error> {
-	src.render_to_pdf()
+    src.render_to_pdf()
 }

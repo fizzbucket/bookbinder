@@ -1,16 +1,15 @@
-use std::error::Error;
-use resvg::Image;
-use std::path::Path;
-use resvg::render;
-use usvg::{Tree, XmlOptions};
-use image::ColorType;
 use image::jpeg::JpegEncoder;
 use image::png::PngEncoder;
+use image::ColorType;
+use resvg::render;
+use resvg::Image;
+use std::error::Error;
 use std::fmt;
+use std::path::Path;
+use usvg::{Tree, XmlOptions};
 
 /// Use usvg to simplify an svg; this is most important in that text is rendered as paths
 pub fn simplify_svg(svg: &str, dpi: Option<usize>) -> Result<String, SvgError> {
-
     let mut options = usvg::Options::default();
     if let Some(dpi) = dpi {
         options.dpi = dpi as f64;
@@ -40,9 +39,7 @@ fn render_svg(svg: &str, dpi: Option<usize>, alpha: bool) -> Result<Image, SvgEr
     } else {
         Some(svgtypes::Color::white())
     };
-    render(&tree, fit_to, background)
-        .ok_or(SvgError::Unspecified)
-
+    render(&tree, fit_to, background).ok_or(SvgError::Unspecified)
 }
 
 /// Convert a svg str to a png file
@@ -50,7 +47,7 @@ pub fn convert_svg_to_png(svg: &str, dpi: Option<usize>) -> Result<Vec<u8>, SvgE
     let image = render_svg(svg, dpi, true)?;
     let width = image.width();
     let height = image.height();
-    
+
     let mut png = Vec::new();
     let encoder = PngEncoder::new(&mut png);
     encoder.encode(image.data(), width, height, ColorType::Rgba8)?;
@@ -62,28 +59,22 @@ pub fn convert_svg_to_jpg(svg: &str, dpi: Option<usize>) -> Result<Vec<u8>, SvgE
     let image = render_svg(svg, dpi, false)?;
     let width = image.width();
     let height = image.height();
-    
+
     let mut jpeg = Vec::new();
     let mut encoder = JpegEncoder::new(&mut jpeg);
     encoder.encode(image.data(), width, height, ColorType::Rgba8)?;
     Ok(jpeg)
 }
 
-
-
-
 #[derive(Debug)]
 pub enum SvgError {
     Unspecified,
     Usvg(usvg::Error),
     Image(image::error::ImageError),
-    Io(std::io::Error)
+    Io(std::io::Error),
 }
 
-impl Error for SvgError {
-    
-}
-
+impl Error for SvgError {}
 
 impl fmt::Display for SvgError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

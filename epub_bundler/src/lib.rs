@@ -7,17 +7,18 @@
 #![deny(missing_debug_implementations)]
 #![deny(variant_size_differences)]
 
-use temp_file_name::{HashToString, TempFilePath};
-use std::borrow::Cow;
 use epub_metadata::{
-    EpubTitleType, MarcRelator, OnixContributorCode, OnixProductIdentifier, OnixTitleCode, ContributorRole
+    ContributorRole, EpubTitleType, MarcRelator, OnixContributorCode, OnixProductIdentifier,
+    OnixTitleCode,
 };
-use std::path::{Path, PathBuf};
 use language_tags::LanguageTag;
+use std::borrow::Cow;
+use std::path::{Path, PathBuf};
+use temp_file_name::{HashToString, TempFilePath};
 mod builder;
+use bookbinder_common::{GuessMimeType, MimeType, MimeTypeHelper};
 use builder::EpubBundler;
 pub use builder::EpubBundlingError;
-use bookbinder_common::{MimeTypeHelper, MimeType, GuessMimeType};
 use regex::Regex;
 
 /// A resource of some kind (i.e. something other than textual content,
@@ -29,25 +30,27 @@ pub struct EpubResource {
     pub mimetype: MimeType,
 }
 
-
 impl EpubResource {
-    
     pub fn from_file<P: AsRef<Path>>(p: P) -> Result<Self, String> {
         let p = p.as_ref();
         if p.is_epub_supported_resource() {
-	        let op = p.file_name()
-	            .ok_or(format!("No file name: {}", p.display()))?;
-	        let output_path = PathBuf::from(op);
-	        let data = std::fs::read(p)
-	            .map_err(|e| format!("{}: [{}]", e.to_string(), p.display()))?;
-	        Ok(EpubResource {
-	            output_path,
-	            data,
-	            mimetype: p.guess_mime().unwrap()
-	        })
-
+            let op = p
+                .file_name()
+                .ok_or(format!("No file name: {}", p.display()))?;
+            let output_path = PathBuf::from(op);
+            let data =
+                std::fs::read(p).map_err(|e| format!("{}: [{}]", e.to_string(), p.display()))?;
+            Ok(EpubResource {
+                output_path,
+                data,
+                mimetype: p.guess_mime().unwrap(),
+            })
         } else {
-        	Err(format!("Invalid mimetype for {}: {:?}", p.display(), p.guess_mime()))
+            Err(format!(
+                "Invalid mimetype for {}: {:?}",
+                p.display(),
+                p.guess_mime()
+            ))
         }
     }
 
@@ -55,17 +58,17 @@ impl EpubResource {
         EpubResource {
             mimetype: MimeType::Jpeg,
             output_path: PathBuf::from(data.temp_filename("jpg")),
-            data
+            data,
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub struct TocEntry {
-	/// the relative level of this entry, where lower is higher.
-	pub level: usize,
-	/// the text to display in the toc entry
-	pub title: String,
+    /// the relative level of this entry, where lower is higher.
+    pub level: usize,
+    /// the text to display in the toc entry
+    pub title: String,
 }
 
 /// A single piece of textual content;
@@ -78,7 +81,7 @@ pub struct EpubContent {
     /// how to display in table of contents
     pub toc_entry: Option<TocEntry>,
     /// whether this content has an embedded svg image.
-    pub includes_svg: bool
+    pub includes_svg: bool,
 }
 
 fn replace_links(text: &str) -> Cow<'_, str> {
@@ -94,7 +97,7 @@ impl EpubContent {
             data,
             output_path,
             toc_entry: None,
-            includes_svg: false
+            includes_svg: false,
         }
     }
 
@@ -104,7 +107,11 @@ impl EpubContent {
     }
 
     /// Display this content in the table of contents with heading `title`
-    pub fn set_toc_title<S: AsRef<str>>(&mut self, title: S, header_level: usize) -> Result<&mut Self, &'static str> {
+    pub fn set_toc_title<S: AsRef<str>>(
+        &mut self,
+        title: S,
+        header_level: usize,
+    ) -> Result<&mut Self, &'static str> {
         match self.toc_entry {
             Some(_) => Err("Toc entry already exists"),
             None => {
@@ -246,10 +253,14 @@ impl EpubSource {
         Ok(self)
     }
 
-    pub fn set_epub_title<S: ToString>(&mut self, title: S, kind: EpubTitleType) -> Result<&mut Self, &'static str> {
+    pub fn set_epub_title<S: ToString>(
+        &mut self,
+        title: S,
+        kind: EpubTitleType,
+    ) -> Result<&mut Self, &'static str> {
         let t = Title {
             code: TitleCode::Unspecified(kind),
-            text: title.to_string()
+            text: title.to_string(),
         };
         self.title.push(t);
         Ok(self)
@@ -288,14 +299,16 @@ impl EpubSource {
         }
     }
 
-    add_marc_contributor!(doc="Add an author", add_author, MarcRelator::Aut);
+    add_marc_contributor!(doc = "Add an author", add_author, MarcRelator::Aut);
     add_marc_contributor!(add_editor, MarcRelator::Edt);
     add_marc_contributor!(add_translator, MarcRelator::Trl);
     add_onix_contributor!(add_author_of_foreword, OnixContributorCode::A23);
     add_onix_contributor!(add_author_of_introduction, OnixContributorCode::A23);
     add_onix_contributor!(add_author_of_afterword, OnixContributorCode::A19);
-    add_onix_contributor!(add_author_of_introduction_and_notes, OnixContributorCode::A29);
-
+    add_onix_contributor!(
+        add_author_of_introduction_and_notes,
+        OnixContributorCode::A29
+    );
 
     /// add a contributor with an onix code
     pub fn add_onix_contributor<S: ToString>(
@@ -350,8 +363,7 @@ impl EpubSource {
     /// Add a resource from a filepath
     pub fn add_resource_from_file(&mut self, filename: PathBuf) -> Result<&mut Self, String> {
         let r = EpubResource::from_file(&filename)?;
-        self.add_resource(r)
-            .map_err(|e| e.to_string())
+        self.add_resource(r).map_err(|e| e.to_string())
     }
 
     /// Add a content document
@@ -363,25 +375,24 @@ impl EpubSource {
     /// Set the base css of the epub
     pub fn set_css(&mut self, css: EpubResource) -> Result<&mut Self, &'static str> {
         if css.mimetype.is_css() {
-        	self.css = Some(css);
-        	Ok(self)
+            self.css = Some(css);
+            Ok(self)
         } else {
-        	Err("Not css")
+            Err("Not css")
         }
     }
 
     /// Set the base css of the epub from a file
     pub fn set_css_from_file(&mut self, path: &Path) -> Result<&mut Self, String> {
         let resource = EpubResource::from_file(&path)?;
-        self.set_css(resource)
-            .map_err(|e| e.to_string())
+        self.set_css(resource).map_err(|e| e.to_string())
     }
 
     /// Set the epub cover image
     pub fn set_cover_image(&mut self, image: EpubResource) -> Result<&mut Self, String> {
         if image.mimetype.is_jpg() || image.mimetype.is_png() {
-	        self.cover_image = Some(image);
-	        Ok(self)
+            self.cover_image = Some(image);
+            Ok(self)
         } else if image.mimetype.is_svg() {
             let d = String::from_utf8(image.data)
                 .map_err(|e| format!("Error converting svg bytes to string: {}", e))?;
@@ -390,7 +401,7 @@ impl EpubSource {
             let resource = EpubResource {
                 output_path: PathBuf::from(format!("{}.jpg", d.hash_to_string())),
                 data,
-                mimetype: MimeType::Jpeg
+                mimetype: MimeType::Jpeg,
             };
             self.cover_image = Some(resource);
             Ok(self)

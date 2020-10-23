@@ -13,8 +13,8 @@
 #![deny(unused_results)]
 #![deny(variant_size_differences)]
 
-use std::convert::TryFrom;
 use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
 use std::str::FromStr;
 
 // Sources:
@@ -30,7 +30,7 @@ pub enum ContributorRole {
     /// An onix code
     Onix(OnixContributorCode),
     /// A marc code
-    Marc(MarcRelator)
+    Marc(MarcRelator),
 }
 
 impl FromStr for ContributorRole {
@@ -65,7 +65,6 @@ impl TryFrom<ContributorRole> for MarcRelator {
     }
 }
 
-
 // https://idpf.github.io/epub-vocabs/structure/#sections
 /// Document partitions
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -77,19 +76,18 @@ pub enum DocumentPartition {
     /// Bodymatter
     Bodymatter,
     /// Backmatter
-    Backmatter
+    Backmatter,
 }
-
 
 /// A mainmatter division of a document
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
 pub enum DocumentDivision {
     Volume,
     Part,
-    Chapter
+    Chapter,
 }
 
-/// 
+///
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
 pub enum DocumentSectionOrComponent {
     Abstract,
@@ -101,7 +99,7 @@ pub enum DocumentSectionOrComponent {
     Conclusion,
     Epilogue,
     Afterword,
-    Epigraph
+    Epigraph,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -112,7 +110,7 @@ pub enum DocumentNavigation {
     Loa,
     Loi,
     Lot,
-    Lov
+    Lov,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -120,7 +118,7 @@ pub enum DocumentReferenceSection {
     Appendix,
     Colophon,
     Credits,
-    Keywords
+    Keywords,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -136,7 +134,7 @@ pub enum PreliminarySection {
     OtherCredits,
     Errata,
     Dedication,
-    RevisionHistory
+    RevisionHistory,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -146,7 +144,7 @@ pub enum TitlesAndHeadings {
     Covertitle,
     Title,
     Subtitle,
-    Bridgehead
+    Bridgehead,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -155,7 +153,7 @@ pub enum Notes {
     Endnote,
     Footnotes,
     Endnotes,
-    NoteRef
+    NoteRef,
 }
 
 /// Marc relators (<http://id.loc.gov/vocabulary/relators.html/>)
@@ -967,7 +965,7 @@ impl FromStr for MarcRelator {
             "writer of added commentary" | "wac" => Ok(MarcRelator::Wac),
             "writer of added lyrics" | "wal" => Ok(MarcRelator::Wal),
             "writer of added text" | "wat" => Ok(MarcRelator::Wat),
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
@@ -989,17 +987,16 @@ impl FromStr for EpubTitleType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-           "main" => Ok(EpubTitleType::Main),
-           "subtitle" => Ok(EpubTitleType::Subtitle),
-           "short" => Ok(EpubTitleType::Short),
-           "collection" => Ok(EpubTitleType::Collection),
-           "edition" => Ok(EpubTitleType::Edition),
-           "expanded" => Ok(EpubTitleType::Expanded),
-           _ => Err(())
+            "main" => Ok(EpubTitleType::Main),
+            "subtitle" => Ok(EpubTitleType::Subtitle),
+            "short" => Ok(EpubTitleType::Short),
+            "collection" => Ok(EpubTitleType::Collection),
+            "edition" => Ok(EpubTitleType::Edition),
+            "expanded" => Ok(EpubTitleType::Expanded),
+            _ => Err(()),
         }
     }
 }
-
 
 /// Dublin core terms (<https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#section-2>)
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Copy, Clone, Hash)]
@@ -1085,8 +1082,7 @@ pub enum DublinCoreElement {
 
 impl DublinCoreElement {
     pub fn as_tagname(&self) -> String {
-        format!("dc:{:?}", self)
-            .to_lowercase()
+        format!("dc:{:?}", self).to_lowercase()
     }
 }
 
@@ -1507,7 +1503,7 @@ impl FromStr for OnixContributorCode {
             "z02" | "Z02" => Ok(OnixContributorCode::Z02),
             "z98" | "Z98" => Ok(OnixContributorCode::Z98),
             "z99" | "Z99" => Ok(OnixContributorCode::Z99),
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
