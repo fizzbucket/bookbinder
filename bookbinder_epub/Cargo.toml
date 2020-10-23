@@ -10,11 +10,11 @@ description = "Produce epub books"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bookbinder_ast = {path="../bookbinder_ast"}
-bookbinder_common = {path="../bookbinder_common"}
-epub_bundler = {path="../epub_bundler"}
-extended_pulldown = {path="../extended_pulldown"}
-temp_file_name = {path="../temp_file_name"}
+bookbinder_ast = {path="../bookbinder_ast", version="0.1.0"}
+bookbinder_common = {path="../bookbinder_common", version="0.1.0"}
+epub_bundler = {path="../epub_bundler", version="0.1.0"}
+extended_pulldown = {path="../extended_pulldown", version="0.1.0"}
+temp_file_name = {path="../temp_file_name", version="0.1.0"}
 uuid = {version="0.8.1", features=["v4"]}
 rustybuzz = "^0.2"
 resvg = "0.11"
@@ -25,7 +25,6 @@ fontdb = "0.2.0"
 lazy_static = "^1.4"
 ttf-parser = "^0.8"
 base64 = "0.12.3"
-paragraph-breaker = { git = "https://github.com/baskerville/paragraph-breaker/"}
 
 [build_dependencies]
 serde = {version = "1.0", features = ["derive"]}
