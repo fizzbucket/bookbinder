@@ -10,11 +10,11 @@ description = "Bundle xhtml, resources and metadata into standards-compliant epu
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-epub_metadata = {path = "../epub_metadata"}
-language-tags = {git = "https://github.com/pyfisch/rust-language-tags/"}
+epub_metadata = {path = "../epub_metadata", version="0.1.0"}
+language-tags = {git = "https://github.com/pyfisch/rust-language-tags/", version="0.3.0"}
 zip = {version = "0.5.4", default-features = false}
-bookbinder_common = {path = "../bookbinder_common"}
-temp_file_name = {path="../temp_file_name"}
+bookbinder_common = {path = "../bookbinder_common", version="0.1.0"}
+temp_file_name = {path="../temp_file_name", version="0.1.0"}
 mime = "0.3"
 time = "0.1"
 regex = "1.3"
