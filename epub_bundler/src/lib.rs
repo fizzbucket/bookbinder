@@ -11,7 +11,6 @@ use epub_metadata::{
     ContributorRole, EpubTitleType, MarcRelator, OnixContributorCode, OnixProductIdentifier,
     OnixTitleCode,
 };
-use language_tags::LanguageTag;
 use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 use temp_file_name::{HashToString, TempFilePath};
@@ -138,7 +137,7 @@ pub struct EpubSource {
     css: Option<EpubResource>,
     title: Vec<Title>,
     identifier: Option<Identifier>,
-    lang: Option<LanguageTag>,
+    lang: Option<String>,
     creators: Vec<Contributor>,
     contributors: Vec<Contributor>,
     last_modification: Option<time::Tm>,
@@ -287,10 +286,132 @@ impl EpubSource {
         Ok(self)
     }
 
+    /// slightly modified from git version of langtags, which we can't use on Cargo
+    fn parse_lang_tag(lang: String) -> Result<String, ()> {
+        #[derive(PartialEq, Eq)]
+        enum State {
+            Start,
+            AfterLanguage,
+            AfterExtLang,
+            AfterScript,
+            AfterRegion,
+            InExtension { expected: bool },
+            InPrivateUse { expected: bool },
+        }
+
+        let mut serialization = String::with_capacity(lang.len());
+
+        let mut state = State::Start;
+        let mut extlangs_count = 0;
+        for (subtag, _) in SubTagIterator::new(&lang) {
+            if subtag.is_empty() {
+                // All subtags have a maximum length of eight characters.
+                return Err(());
+            }
+            if subtag.len() > 8 {
+                // All subtags have a maximum length of eight characters.
+                return Err(());
+            }
+            if state == State::Start {
+                // Primary language
+                if subtag.len() < 2 || !is_alphabetic(subtag) {
+                    return Err(());
+                }
+                serialization.extend(to_lowercase(subtag));
+                if subtag.len() < 4 {
+                    // extlangs are only allowed for short language tags
+                    state = State::AfterLanguage;
+                } else {
+                    state = State::AfterExtLang;
+                }
+            } else if let State::InPrivateUse { .. } = state {
+                if !is_alphanumeric(subtag) {
+                    return Err(());
+                }
+                serialization.push('-');
+                serialization.extend(to_lowercase(subtag));
+                state = State::InPrivateUse { expected: false };
+            } else if subtag == "x" || subtag == "X" {
+                // We make sure extension is found
+                if let State::InExtension { expected: true } = state {
+                    return Err(());
+                }
+                serialization.push('-');
+                serialization.push('x');
+                state = State::InPrivateUse { expected: true };
+            } else if subtag.len() == 1 && is_alphanumeric(subtag) {
+                // We make sure extension is found
+                if let State::InExtension { expected: true } = state {
+                    return Err(());
+                }
+                let extension_tag = subtag.chars().next().unwrap().to_ascii_lowercase();
+                serialization.push('-');
+                serialization.push(extension_tag);
+                state = State::InExtension { expected: true };
+            } else if let State::InExtension { .. } = state {
+                if !is_alphanumeric(subtag) {
+                    return Err(());
+                }
+                serialization.push('-');
+                serialization.extend(to_lowercase(subtag));
+                state = State::InExtension { expected: false };
+            } else if state == State::AfterLanguage && subtag.len() == 3 && is_alphabetic(subtag) {
+                extlangs_count += 1;
+                if extlangs_count > 3 {
+                    return Err(());
+                }
+                // valid extlangs
+                serialization.push('-');
+                serialization.extend(to_lowercase(subtag));
+            } else if (state == State::AfterLanguage || state == State::AfterExtLang)
+                && subtag.len() == 4
+                && is_alphabetic(subtag)
+            {
+                // Script
+                serialization.push('-');
+                serialization.extend(to_uppercase_first(subtag));
+                state = State::AfterScript;
+            } else if (state == State::AfterLanguage
+                || state == State::AfterExtLang
+                || state == State::AfterScript)
+                && (subtag.len() == 2 && is_alphabetic(subtag)
+                    || subtag.len() == 3 && is_numeric(subtag))
+            {
+                // Region
+                serialization.push('-');
+                serialization.extend(to_uppercase(subtag));
+                state = State::AfterRegion;
+            } else if (state == State::AfterLanguage
+                || state == State::AfterExtLang
+                || state == State::AfterScript
+                || state == State::AfterRegion)
+                && is_alphanumeric(subtag)
+                && (subtag.len() >= 5 && is_alphabetic(&subtag[0..1])
+                    || subtag.len() >= 4 && is_numeric(&subtag[0..1]))
+            {
+                // Variant
+                serialization.push('-');
+                serialization.extend(to_lowercase(subtag));
+                state = State::AfterRegion;
+            } else {
+                return Err(());
+            }
+        }
+
+        //We make sure we are in a correct final state
+        if let State::InExtension { expected: true } = state {
+            return Err(());
+        }
+        if let State::InPrivateUse { expected: true } = state {
+            return Err(());
+        }
+        Ok(serialization)
+    }
+
     /// set the language of the epub
     pub fn set_language<S: ToString>(&mut self, lang: S) -> Result<&mut Self, &'static str> {
         let l = lang.to_string();
-        match LanguageTag::parse(&l) {
+        match Self::parse_lang_tag(l) {
             Ok(val) => {
                 self.lang = Some(val);
                 Ok(self)
@@ -422,6 +543,57 @@ impl EpubSource {
     pub fn bundle(&mut self) -> Result<Vec<u8>, EpubBundlingError> {
         self.bundle_epub()
     }
+}
+
+struct SubTagIterator<'a> {
+    split: std::str::Split<'a, char>,
+    position: usize,
+}
+
+impl<'a> SubTagIterator<'a> {
+    fn new(input: &'a str) -> Self {
+        Self {
+            split: input.split('-'),
+            position: 0,
+        }
+    }
+}
+
+impl<'a> Iterator for SubTagIterator<'a> {
+    type Item = (&'a str, usize);
+
+    fn next(&mut self) -> Option<(&'a str, usize)> {
+        let tag = self.split.next()?;
+        let tag_end = self.position + tag.len();
+        self.position = tag_end + 1;
+        Some((tag, tag_end))
+    }
+}
+
+fn is_alphabetic(s: &str) -> bool {
+    s.chars().all(|x| x.is_ascii_alphabetic())
+}
+
+fn is_numeric(s: &str) -> bool {
+    s.chars().all(|x| x.is_ascii_digit())
+}
+
+fn is_alphanumeric(s: &str) -> bool {
+    s.chars().all(|x| x.is_ascii_alphanumeric())
+}
+
+fn to_uppercase<'a>(s: &'a str) -> impl Iterator<Item = char> + 'a {
+    s.chars().map(|c| c.to_ascii_uppercase())
+}
+
+// Beware: panics if s.len() == 0 (should never happen in our code)
+fn to_uppercase_first<'a>(s: &'a str) -> impl Iterator<Item = char> + 'a {
+    let mut chars = s.chars();
+    std::iter::once(chars.next().unwrap().to_ascii_uppercase()).chain(chars.map(|c| c.to_ascii_lowercase()))
+}
+
+fn to_lowercase<'a>(s: &'a str) -> impl Iterator<Item = char> + 'a {
+    s.chars().map(|c| c.to_ascii_lowercase())
 }
 
 #[cfg(test)]

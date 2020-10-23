@@ -11,7 +11,6 @@ description = "Bundle xhtml, resources and metadata into standards-compliant epu
 
 [dependencies]
 epub_metadata = {path = "../epub_metadata", version="0.1.0"}
-language-tags = {git = "https://github.com/pyfisch/rust-language-tags/", version="0.3.0"}
 zip = {version = "0.5.4", default-features = false}
 bookbinder_common = {path = "../bookbinder_common", version="0.1.0"}
 temp_file_name = {path="../temp_file_name", version="0.1.0"}

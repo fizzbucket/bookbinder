@@ -4,7 +4,6 @@ use epub_metadata::{
     ContributorRole, DublinCoreElement, EpubTitleType, MarcRelator, OnixContributorCode,
     OnixProductIdentifier, OnixTitleCode, ValueMapping,
 };
-use language_tags::LanguageTag;
 use std::borrow::Cow;
 use std::error::Error;
 use std::fmt;
@@ -242,11 +241,11 @@ impl<'a> MetadataGrouping<'a> {
         MetadataGrouping { base, refines }
     }
 
-    fn from_lang(lang: &'a LanguageTag) -> Self {
+    fn from_lang(lang: &'a str) -> Self {
         let base = DcMetadata {
             core: DublinCoreElement::Language,
             id: None,
-            value: Some(Cow::Borrowed(lang.as_str())),
+            value: Some(Cow::Borrowed(lang))
         };
         MetadataGrouping {
             base,
