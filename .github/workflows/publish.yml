@@ -16,7 +16,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: bookbinder
-          path: target/release/bookbinder
+          path: target/release/bookbinder_linux
   publish_windows:
     name: Publish for Windows
     runs-on: windows-latest
@@ -47,4 +47,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: bookbinder
-          path: target/release/bookbinder
+          path: target/release/bookbinder_darwin
