@@ -1,4 +1,4 @@
-use crate::paragraph_breaker::{total_fit, Item};
+use paragraph_breaker::{total_fit, Item};
 use crate::svg_titlepage_generator::{
     FontData, SizedText, TitleEvent, TypeSetter, HORIZONTAL_MARGIN, WIDTH,
 };

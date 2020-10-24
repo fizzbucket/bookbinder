@@ -25,7 +25,6 @@ mod text_splitting;
 use bookbinder_ast::helpers::{CollatedEpigraph, CollatedHeader, CollatedTitlePage};
 use std::error::Error;
 use svg_titlepage_generator::{generate_svg_titlepage, TitleEvent};
-pub(crate) mod paragraph_breaker;
 
 // A fragment added by the build script;
 // it contains a set of fns:
