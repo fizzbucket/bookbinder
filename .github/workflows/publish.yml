@@ -23,6 +23,7 @@ jobs:
             os: windows-latest
             artifact_name: bookbinder.exe
             asset_name: bookbinder-windows
+            run: echo "::add-path::C:\msys64\mingw64\bin" 
           - name: macos
             os: macos-latest
             artifact_name: bookbinder
