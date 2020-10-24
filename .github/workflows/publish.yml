@@ -3,47 +3,31 @@ name: Publish
 on: [push]
 
 jobs:
-  publish:
-    name: Publish for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        name: [
-            linux,
-            windows,
-            macos
-        ]
-
-        include:
-          - name: linux
-            os: ubuntu-latest
-            artifact_name: bookbinder
-            asset_name: bookbinder-linux
-          - name: windows
-            os: windows-latest
-            artifact_name: bookbinder.exe
-            asset_name: bookbinder-windows
-            run: echo "::add-path::C:\msys64\mingw64\bin" 
-          - name: macos
-            os: macos-latest
-            artifact_name: bookbinder
-            asset_name: bookbinder-macos
-
-    steps:
+  publish_linux:
+    name: Publish for Linux
+    runs-on: ubuntu-latest
     - uses: actions/checkout@v1
-
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: stable
-
-    - name: Build
-      run: cargo build --release
-
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v1-release
+    run: cargo build --release
+  publish_windows:
+    name: Publish for Windows
+    runs-on: windows-latest
+    - uses: actions/checkout@v1
+    - uses: actions-rs/toolchain@v1
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/release/${{ matrix.artifact_name }}
-        asset_name: ${{ matrix.asset_name }}
-        tag: ${{ github.ref }}
+        profile: minimal
+        toolchain: stable
+    run: echo "::add-path::C:\msys64\mingw64\bin"
+    run: cargo build --release
+  publish_mac:
+    name: Publish for Mac
+    runs-on: macos-latest
+    - uses: actions/checkout@v1
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+    run: cargo build --release
