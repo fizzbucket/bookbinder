@@ -15,7 +15,7 @@ jobs:
       - run: cargo build --release
       - uses: actions/upload-artifact@v2
         with:
-          name: bookbinder
+          name: bookbinder_linux
           path: target/release/bookbinder
   publish_windows:
     name: Publish for Windows
@@ -30,7 +30,7 @@ jobs:
       - run: cargo build --release
       - uses: actions/upload-artifact@v2
         with:
-          name: bookbinder
+          name: bookbinder_windows
           path: target/release/bookbinder.exe
 
 
@@ -46,5 +46,5 @@ jobs:
       - run: cargo build --release
       - uses: actions/upload-artifact@v2
         with:
-          name: bookbinder
+          name: bookbinder_darwin
           path: target/release/bookbinder
