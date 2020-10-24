@@ -6,8 +6,8 @@ jobs:
   publish_linux:
     name: Publish for Linux
     runs-on: ubuntu-latest
-    - uses: actions/checkout@v1
-    - uses: actions-rs/toolchain@v1
+    uses: actions/checkout@v1
+    uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: stable
@@ -15,8 +15,8 @@ jobs:
   publish_windows:
     name: Publish for Windows
     runs-on: windows-latest
-    - uses: actions/checkout@v1
-    - uses: actions-rs/toolchain@v1
+    uses: actions/checkout@v1
+    uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: stable
@@ -25,8 +25,8 @@ jobs:
   publish_mac:
     name: Publish for Mac
     runs-on: macos-latest
-    - uses: actions/checkout@v1
-    - uses: actions-rs/toolchain@v1
+    uses: actions/checkout@v1
+    uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: stable
