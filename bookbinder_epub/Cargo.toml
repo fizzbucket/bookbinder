@@ -17,8 +17,8 @@ extended_pulldown = {path="../extended_pulldown", version="0.1.0"}
 temp_file_name = {path="../temp_file_name", version="0.1.0"}
 uuid = {version="0.8.1", features=["v4"]}
 rustybuzz = "^0.2"
-resvg = "0.11"
-usvg = "0.11"
+resvg = {git="https://github.com/RazrFalcon/resvg", version="^0.11"}
+usvg = {git="https://github.com/RazrFalcon/resvg", version="^0.11"}
 svgtypes = "0.5"
 image = {version = "0.23.9", features = ["png", "jpeg"]}
 fontdb = "0.2.0"
