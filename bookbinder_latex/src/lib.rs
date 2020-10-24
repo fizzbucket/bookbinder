@@ -866,7 +866,6 @@ impl TexRenderer for BookSrc<'_> {
 
 /// Support for rendering to a pdf file
 pub trait PdfRenderer: TexRenderer + Sized {
-    
     /// small method to call `latexmk --version`, in order
     /// to check that it is installed before rendering
     fn check_latexmk() -> Result<(), std::io::Error> {
@@ -874,7 +873,12 @@ pub trait PdfRenderer: TexRenderer + Sized {
             .arg("--version")
             .stdout(std::process::Stdio::null())
             .output()
-            .map_err(|_| std::io::Error::new(std::io::ErrorKind::Other, "Could not find latexmk; you probably need to install texlive"))
+            .map_err(|_| {
+                std::io::Error::new(
+                    std::io::ErrorKind::Other,
+                    "Could not find latexmk; you probably need to install texlive",
+                )
+            })
             .map(|_| ())
     }
 

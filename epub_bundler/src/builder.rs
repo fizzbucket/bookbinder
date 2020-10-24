@@ -245,7 +245,7 @@ impl<'a> MetadataGrouping<'a> {
         let base = DcMetadata {
             core: DublinCoreElement::Language,
             id: None,
-            value: Some(Cow::Borrowed(lang))
+            value: Some(Cow::Borrowed(lang)),
         };
         MetadataGrouping {
             base,

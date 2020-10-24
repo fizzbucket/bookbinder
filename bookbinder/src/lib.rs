@@ -6,12 +6,12 @@
 //! 2. [epub](https://raw.githubusercontent.com/fizzbucket/bookbinder/main/bookbinder/tests/test.epub)
 //!
 //! # Installation
-//! 
-//! 
+//!
+//!
 //! Pdf support currently requires `xelatex` and `latexmk` to be installed; most LaTeX installations will have these already.
 //! If you want to include images in pdf format, the command `pdfcairo` should also be available. Otherwise, we have no dependencies!
-//! 
-//! There is support for a limited binary which takes a json specification of a book -- see `DeserializableBook` -- from stdin and writes it to stdout; 
+//!
+//! There is support for a limited binary which takes a json specification of a book -- see `DeserializableBook` -- from stdin and writes it to stdout;
 //! the easiest way to get that is probably `cargo install bookbinder`. Then usage is as simple as `cat in.json | bookbinder > out.pdf`
 //! But it's more likely you'll be using this as part of a script or library.
 //! Add `bookbinder = "0.1.0"` to your Cargo.toml, and read on for details!

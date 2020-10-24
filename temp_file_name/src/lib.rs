@@ -43,7 +43,7 @@ pub trait TempFilePath {
     /// Get a suitable temporary filename for a hashable object;
     /// this filename should be based on the hash and consistent across multiple calls,
     /// so that later callers can use the function to reconstruct an already-created filename.
-    /// Note that the output is a string, not a PathBuf, since we can guarantee that the filename
+    /// Note that the output is a string, not a `PathBuf`, since we can guarantee that the filename
     /// will be valid unicode.
     fn temp_filename(&self, ext: &str) -> String;
     /// Generate a temporary filepath for an object, giving it the extension `ext`. This should

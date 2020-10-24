@@ -589,7 +589,8 @@ fn to_uppercase<'a>(s: &'a str) -> impl Iterator<Item = char> + 'a {
 // Beware: panics if s.len() == 0 (should never happen in our code)
 fn to_uppercase_first<'a>(s: &'a str) -> impl Iterator<Item = char> + 'a {
     let mut chars = s.chars();
-    std::iter::once(chars.next().unwrap().to_ascii_uppercase()).chain(chars.map(|c| c.to_ascii_lowercase()))
+    std::iter::once(chars.next().unwrap().to_ascii_uppercase())
+        .chain(chars.map(|c| c.to_ascii_lowercase()))
 }
 
 fn to_lowercase<'a>(s: &'a str) -> impl Iterator<Item = char> + 'a {
