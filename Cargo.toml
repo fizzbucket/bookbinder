@@ -13,3 +13,6 @@ members = [
 
 [profile.release]
 lto = true
+
+[patch.crates-io]
+tiny-skia = { git = 'https://github.com/RazrFalcon/tiny-skia' }
