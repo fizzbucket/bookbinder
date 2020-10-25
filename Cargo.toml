@@ -16,3 +16,6 @@ lto = true
 
 [patch.crates-io]
 tiny-skia = { git = 'https://github.com/RazrFalcon/tiny-skia' }
+
+[patch."https://github.com/RazrFalcon/resvg"]
+tiny-skia = { git = 'https://github.com/RazrFalcon/tiny-skia' }
