@@ -26,7 +26,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-      - run: echo "::add-path::C:\msys64\mingw64\bin"
       - run: cargo build --release
       - uses: actions/upload-artifact@v2
         with:
