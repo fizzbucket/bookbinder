@@ -661,7 +661,7 @@ impl EpubBundler for EpubSource {
             if let Some(ref id) = item.id {
                 opf.push_str(&format!(" id=\"{}\"", id));
             }
-            opf.push_str(">");
+            opf.push('>');
             if let Some(ref val) = item.value {
                 opf.push_str(&val);
             }
@@ -670,7 +670,7 @@ impl EpubBundler for EpubSource {
         for item in meta_metadata.iter() {
             opf.push_str("    <meta property=\"");
             opf.push_str(&item.property);
-            opf.push_str("\"");
+            opf.push('"');
             if let Some(dir) = item.dir {
                 opf.push_str(&format!(" dir=\"{}\"", dir));
             }
@@ -683,7 +683,7 @@ impl EpubBundler for EpubSource {
             if let Some(scheme) = item.scheme {
                 opf.push_str(&format!(" scheme=\"{}\"", scheme));
             }
-            opf.push_str(">");
+            opf.push('>');
             opf.push_str(&item.value);
             opf.push_str("</meta>\n");
         }
