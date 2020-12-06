@@ -38,8 +38,7 @@ impl RunningHeader {
                         out.push_str(cmd);
                         out.push('[');
                         out.push_str($code);
-                        out.push(']');
-                        out.push_str("{{");
+                        out.push_str("]{{");
                         out.push_str(t);
                         out.push_str("}}\n");
                     }
@@ -122,17 +121,6 @@ pub enum MeasurementUnit {
     Mm,
 }
 
-#[derive(Debug, Clone)]
-pub struct LatexMargins {
-    pub paper_width: f32,
-    pub paper_height: f32,
-    pub top: f32,
-    pub bottom: f32,
-    pub left: f32,
-    pub right: f32,
-    pub unit: MeasurementUnit,
-}
-
 // AMAZON KDP SIZES for expanded distribution with black ink on cream paper are:
 // 5" x 8" (12.7 x 20.32 cm)
 // 5.25" x 8" (13.34 x 20.32 cm)
@@ -169,93 +157,56 @@ impl Default for PaperSize {
     }
 }
 
-impl From<PaperSize> for LatexMargins {
-    fn from(src: PaperSize) -> Self {
-        match src {
-            PaperSize::Inches5x8 => INCHES5X8_MARGINS.clone(),
-            PaperSize::Inches5_25x8 => INCHES5_25X8_MARGINS.clone(),
-            PaperSize::Inches5_5x8_5 => INCHES5_5X8_5_MARGINS.clone(),
-            PaperSize::Inches6x9 => INCHES6X9_MARGINS.clone(),
-            PaperSize::A4Paper => A4_PAPER_MARGINS.clone(),
-            PaperSize::USLetter => USLETTER_MARGINS.clone(),
-            PaperSize::USLegal => USLEGAL_MARGINS.clone(),
+#[derive(Debug, Clone)]
+pub struct LatexMargins {
+    pub paper_width: f32,
+    pub paper_height: f32,
+    pub top: f32,
+    pub bottom: f32,
+    pub left: f32,
+    pub right: f32,
+    pub unit: MeasurementUnit,
+}
+
+impl LatexMargins {
+
+    const fn new(paper_width: f32, paper_height: f32, top: f32, bottom: f32, left: f32, right: f32, unit: MeasurementUnit) -> Self {
+        LatexMargins {
+            paper_width,
+            paper_height,
+            top,
+            bottom,
+            left,
+            right,
+            unit
         }
+
+    }
+
+    const fn new_margins_mm(paper_width: f32, paper_height: f32, top: f32, bottom: f32, left: f32, right: f32) -> Self {
+        Self::new(paper_width, paper_height, top, bottom, left, right, MeasurementUnit::Mm)
+    }
+
+    const fn new_margins_inches(paper_width: f32, paper_height: f32, top: f32, bottom: f32, left: f32, right: f32) -> Self {
+        Self::new(paper_width, paper_height, top, bottom, left, right, MeasurementUnit::Inches)
     }
 }
 
-static INCHES5X8_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Inches,
-    paper_width: 5.0,
-    paper_height: 8.0,
-    top: 0.4,
-    bottom: 0.8,
-    left: 0.875,
-    right: 0.75,
-};
-
-static INCHES5_25X8_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Inches,
-    paper_width: 5.25,
-    paper_height: 8.0,
-    top: 0.4,
-    bottom: 0.8,
-    left: 0.875,
-    right: 0.75,
-};
-
-static INCHES5_5X8_5_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Inches,
-    paper_width: 5.5,
-    paper_height: 8.5,
-    top: 0.5,
-    bottom: 0.9,
-    left: 0.875,
-    right: 0.75,
-};
-
-static INCHES6X9_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Inches,
-    paper_width: 6.0,
-    paper_height: 9.0,
-    top: 0.5,
-    bottom: 1.0,
-    left: 0.875,
-    right: 0.75,
-};
-
-static A4_PAPER_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Mm,
-    paper_width: 210.0,
-    paper_height: 297.0,
-    top: 20.0,
-    bottom: 30.0,
-    left: 40.0,
-    right: 30.0,
-};
-
-static USLETTER_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Inches,
-    paper_width: 8.5,
-    paper_height: 11.0,
-    top: 1.0,
-    bottom: 1.4,
-    left: 1.4,
-    right: 1.4,
-};
-
-static USLEGAL_MARGINS: LatexMargins = LatexMargins {
-    unit: MeasurementUnit::Inches,
-    paper_width: 8.5,
-    paper_height: 14.0,
-    top: 1.0,
-    bottom: 1.4,
-    left: 1.4,
-    right: 1.4,
-};
+const fn margins_from_papersize(papersize: PaperSize) -> LatexMargins {
+    match papersize {
+        PaperSize::Inches5x8 => LatexMargins::new_margins_inches(5.0, 8.0, 0.4, 0.8, 0.875, 0.75),
+        PaperSize::Inches5_25x8 => LatexMargins::new_margins_inches(5.25, 8.0, 0.4, 0.8, 0.875, 0.75),
+        PaperSize::Inches5_5x8_5 => LatexMargins::new_margins_inches(5.5, 8.5, 0.5, 0.9, 0.875, 0.75),
+        PaperSize::Inches6x9 =>  LatexMargins::new_margins_inches(6.0, 9.0, 0.5, 1.0, 0.875, 0.75),
+        PaperSize::A4Paper => LatexMargins::new_margins_mm(210.0, 297.0, 20.0, 30.0, 40.0, 30.0),
+        PaperSize::USLetter => LatexMargins::new_margins_inches(8.5, 11.0, 1.0, 1.4, 1.4, 1.4),
+        PaperSize::USLegal => LatexMargins::new_margins_inches(8.5, 14.0, 1.4, 1.4, 1.4, 1.4)
+    }
+}
 
 impl Default for LatexMargins {
     fn default() -> Self {
-        LatexMargins::from(PaperSize::default())
+        margins_from_papersize(PaperSize::default())
     }
 }
 
@@ -300,7 +251,8 @@ impl LatexFont {
     }
 
     pub(crate) fn default_sans() -> Self {
-        Self::new_from_font_info(&SANS_FONT_PATHS).expect("Error producing default latex sans font")
+        Self::new_from_font_info(&SANS_FONT_PATHS)
+            .expect("Error producing default latex sans font")
     }
 
     fn new_from_font_info(src: &FontInfo) -> Result<Self, std::io::Error> {
@@ -704,7 +656,7 @@ impl PreambleOptions {
 
     /// Set the size of paper to use in this book
     pub fn set_papersize(&mut self, size: PaperSize) -> &mut Self {
-        self.latex_margins = LatexMargins::from(size);
+        self.latex_margins = margins_from_papersize(size);
         self
     }
 
@@ -811,41 +763,42 @@ impl PreambleOptions {
         preamble.push('\n');
         preamble.push_str(&self.get_preamble_packages());
 
-        if let Some(ref serif) = self.latex_fonts.serif {
-            preamble.push_str(&serif.display_main());
-        } else {
-            let serif = LatexFont::default_serif();
-            preamble.push_str(&serif.display_main());
+        // add fonts to the preamble
+        macro_rules! font_face {
+            // a broad typeface like `roman` or `sans` which will be replaced by a default
+            // if not present
+            ($field:ident, $display_fn:ident, $default:ident) => {
+                if let Some(ref font) = self.latex_fonts.$field {
+                    preamble.push_str(&font.$display_fn());
+                } else {
+                    let d = LatexFont::$default();
+                    preamble.push_str(&d.$display_fn());
+                }
+            };
+            // a broad typeface without a default
+            ($field:ident, $display_fn:ident) => {
+                if let Some(ref font) = self.latex_fonts.$field {
+                    preamble.push_str(&font.$display_fn());
+                }
+            };
+            // a specific typeface which falls back to sans if not defined
+            ($field:ident, $family_name:expr) => {
+                if let Some(ref font) = self.latex_fonts.$field {
+                    preamble.push_str(&font.display_new_family($family_name));
+                } else {
+                    preamble.push_str("\\newcommand{\\");
+                    preamble.push_str($family_name);
+                    preamble.push_str("}{\\sffamily}\n");
+                }
+            }
         }
 
-        if let Some(ref sans) = self.latex_fonts.sans {
-            preamble.push_str(&sans.display_sans());
-        } else {
-            let sans = LatexFont::default_sans();
-            preamble.push_str(&sans.display_sans());
-        }
-
-        if let Some(ref mono) = self.latex_fonts.mono {
-            preamble.push_str(&mono.display_mono());
-        }
-
-        if let Some(ref titlepage_typeface) = self.latex_fonts.titlepage {
-            preamble.push_str(&titlepage_typeface.display_new_family("titlepagetypeface"));
-        } else {
-            preamble.push_str("\\newcommand{\\titlepagetypeface}{\\sffamily}\n");
-        }
-
-        if let Some(ref running_typeface) = self.latex_fonts.running {
-            preamble.push_str(&running_typeface.display_new_family("runningtypeface"));
-        } else {
-            preamble.push_str("\\newcommand{\\runningtypeface}{\\sffamily}\n");
-        }
-
-        if let Some(ref heading_typeface) = self.latex_fonts.heading {
-            preamble.push_str(&heading_typeface.display_new_family("headingtypeface"));
-        } else {
-            preamble.push_str("\\newcommand{\\headingtypeface}{\\sffamily}\n");
-        }
+        font_face!(serif, display_main, default_serif);
+        font_face!(sans, display_sans, default_sans);
+        font_face!(mono, display_mono);
+        font_face!(titlepage, "titlepagetypeface");
+        font_face!(running, "runningtypeface");
+        font_face!(heading, "headingtypeface");
 
         preamble.push_str(HOUSEKEEPING);
         preamble.push('\n');

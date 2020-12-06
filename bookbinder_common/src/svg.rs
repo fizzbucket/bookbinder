@@ -15,7 +15,7 @@ pub fn simplify_svg(svg: &str, dpi: Option<usize>) -> Result<String, SvgError> {
         options.dpi = dpi as f64;
     }
 
-    options.fontdb = crate::fonts::USVG_FONT_DB.clone();
+    options.fontdb = crate::fonts::FULL_FONT_DB.clone();
 
     let tree = Tree::from_str(svg, &options)?;
     Ok(tree.to_string(XmlOptions::default()))

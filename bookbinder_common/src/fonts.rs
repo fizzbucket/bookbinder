@@ -2,7 +2,6 @@
 use fontdb::{Database, Family, Query};
 use lazy_static::lazy_static;
 use std::path::{Path, PathBuf};
-use usvg::SystemFontDB;
 
 lazy_static! {
     /// a minimal font db containing default sans and serif fonts
@@ -31,28 +30,6 @@ lazy_static! {
     pub static ref FULL_FONT_DB: Database = {
         let mut db = LIMITED_FONT_DB.clone();
         load_system_fonts(&mut db);
-        db
-    };
-
-    /// a font db compatible with the older version of `fontdb` used by usvg
-    pub static ref USVG_FONT_DB: usvg::fontdb::Database = {
-        let mut db = usvg::fontdb::Database::new();
-        db.load_font_data(DEFAULT_SANS_BOLD.to_vec());
-        db.load_font_data(DEFAULT_SANS_BOLD.to_vec());
-        db.load_font_data(DEFAULT_SANS_BOLD_ITALIC.to_vec());
-        db.load_font_data(DEFAULT_SANS_ITALIC.to_vec());
-        db.load_font_data(DEFAULT_SANS.to_vec());
-        db.load_font_data(DEFAULT_SANS_SEMIBOLD.to_vec());
-        db.load_font_data(DEFAULT_SANS_SEMIBOLD_ITALIC.to_vec());
-        db.load_font_data(DEFAULT_SERIF_BOLD.to_vec());
-        db.load_font_data(DEFAULT_SERIF_BOLD_ITALIC.to_vec());
-        db.load_font_data(DEFAULT_SERIF_ITALIC.to_vec());
-        db.load_font_data(DEFAULT_SERIF.to_vec());
-        db.load_system_fonts();
-
-        db.set_sans_serif_family(DEFAULT_SANS_FAMILY_NAME);
-        db.set_serif_family(DEFAULT_SERIF_FAMILY_NAME);
-
         db
     };
 
