@@ -10,7 +10,7 @@ description = "Produce books in various formats from markdown, with some underst
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bookbinder_ast = {path="../bookbinder_ast", version="0.1.1"}
+bookbinder_ast = {path="../bookbinder_ast", version="0.1.0"}
 bookbinder_epub = {path="../bookbinder_epub", version="0.1.1"}
 bookbinder_latex = {path="../bookbinder_latex", version="0.1.1"}
 serde = {version="^1", features = ["derive"]}
