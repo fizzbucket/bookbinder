@@ -1,6 +1,6 @@
 [package]
 name = "bookbinder_ast"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Tom McLean <thomasowenmclean@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/fizzbucket/bookbinder"
@@ -11,6 +11,6 @@ description = "Produce abstract representations of a book for later rendering"
 
 [dependencies]
 extended_pulldown = {path="../extended_pulldown", version="0.1.0"}
-bookbinder_common = {path="../bookbinder_common", version="0.1.0"}
+bookbinder_common = {path="../bookbinder_common", version="0.1.1"}
 pulldown-cmark = "^0.8"
 temp_file_name = {path="../temp_file_name", version="0.1.0"}

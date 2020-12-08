@@ -1,6 +1,6 @@
 [package]
 name = "epub_bundler"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Tom McLean <thomasowenmclean@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/fizzbucket/bookbinder"
@@ -12,7 +12,7 @@ description = "Bundle xhtml, resources and metadata into standards-compliant epu
 [dependencies]
 epub_metadata = {path = "../epub_metadata", version="0.1.0"}
 zip = {version = "0.5.4", default-features = false}
-bookbinder_common = {path = "../bookbinder_common", version="0.1.0"}
+bookbinder_common = {path = "../bookbinder_common", version="0.1.1"}
 temp_file_name = {path="../temp_file_name", version="0.1.0"}
 mime = "0.3"
 time = "0.1"
